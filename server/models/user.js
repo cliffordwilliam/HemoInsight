@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../mongoConnect");
 const Helper = require("../helper");
+const redis = require("../redis");
 
 module.exports = class User {
   static collection() {
@@ -12,23 +13,32 @@ module.exports = class User {
       // return await this.collection()
       //   .find({}, { projection: { password: 0 } })
       //   .toArray();
-      return await this.collection()
-        .aggregate([
-          {
-            $lookup: {
-              from: "childs",
-              localField: "_id",
-              foreignField: "userId",
-              as: "childs",
+      const cachedData = await redis.get("redisUser");
+      if (cachedData) {
+        console.log("User model -> GOT redisUser cache");
+        return JSON.parse(cachedData);
+      } else {
+        console.log("User model -> NO redisUser cache");
+        const newData = await this.collection()
+          .aggregate([
+            {
+              $lookup: {
+                from: "childs",
+                localField: "_id",
+                foreignField: "userId",
+                as: "childs",
+              },
             },
-          },
-          {
-            $project: {
-              password: 0,
+            {
+              $project: {
+                password: 0,
+              },
             },
-          },
-        ])
-        .toArray();
+          ])
+          .toArray();
+        await redis.set("redisUser", JSON.stringify(newData));
+        return newData;
+      }
     } catch (error) {
       throw error;
     }
