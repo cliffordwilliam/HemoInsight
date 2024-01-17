@@ -1,12 +1,12 @@
 const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../mongoConnect");
-const Helper = require("../helper");
 
-module.exports = class Child {
+module.exports = class Service {
     static collection() {
-        return getDatabase().collection("childs");
+        return getDatabase().collection("Services");
     }
 
+    //get all services available
     static async findAll() {
         try {
             return await this.collection().find().toArray();
@@ -15,20 +15,10 @@ module.exports = class Child {
         }
     }
 
+    //find one services for detailed information
     static async findOneBy(query) {
         try {
             return await this.collection().findOne(query);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    static async createChild(payload) {
-        try {
-            const result = await this.collection().insertOne(payload);
-            return await this.findOneBy({
-                _id: result.insertedId,
-            });
         } catch (error) {
             throw error;
         }

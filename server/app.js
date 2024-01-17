@@ -9,38 +9,40 @@ const Middleware = require("./middleware");
 // Typedefs
 const userTypedef = require("./typedefs/userTypedef");
 const childTypedef = require("./typedefs/childTypedef");
+const serviceTypedef = require("./typedefs/serviceTypedef");
 
 // Resolvers
 const userResolvers = require("./resolvers/userResolver");
 const childResolvers = require("./resolvers/childResolver");
+const serviceResolvers = require("./resolvers/serviceResolver");
 
-const typeDefs = [userTypedef, childTypedef];
+const typeDefs = [userTypedef, childTypedef, serviceTypedef];
 
-const resolvers = [userResolvers, childResolvers];
+const resolvers = [userResolvers, childResolvers, serviceResolvers];
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  introspection: true,
+    typeDefs,
+    resolvers,
+    introspection: true,
 });
 
 (async () => {
-  try {
-    await mongoConnect.connect();
+    try {
+        await mongoConnect.connect();
 
-    const { url } = await startStandaloneServer(server, {
-      listen: {
-        port: PORT,
-      },
-      // middleware
-      context: async ({ req }) => {
-        return {
-          tokenGuard: async () => Middleware.tokenGuard(req),
-        };
-      },
-    });
-    console.log(`Listening: ${url}`);
-  } catch (error) {
-    console.log(error);
-  }
+        const { url } = await startStandaloneServer(server, {
+            listen: {
+                port: PORT,
+            },
+            // middleware
+            context: async ({ req }) => {
+                return {
+                    tokenGuard: async () => Middleware.tokenGuard(req),
+                };
+            },
+        });
+        console.log(`Listening: ${url}`);
+    } catch (error) {
+        console.log(error);
+    }
 })();
