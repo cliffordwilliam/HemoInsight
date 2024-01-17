@@ -10,6 +10,6 @@ type Service {
 type Query {
     getServices: [Service]
     serviceById(id:ID):Service
-    serviceByName(title:String):Service
+    serviceByName(title:String):[Service]
 }
 `;

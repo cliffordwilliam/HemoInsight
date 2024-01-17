@@ -10,15 +10,22 @@ const Middleware = require("./middleware");
 const userTypedef = require("./typedefs/userTypedef");
 const childTypedef = require("./typedefs/childTypedef");
 const serviceTypedef = require("./typedefs/serviceTypedef");
+const reportTypedef = require("./typedefs/reportTypedef");
 
 // Resolvers
 const userResolvers = require("./resolvers/userResolver");
 const childResolvers = require("./resolvers/childResolver");
 const serviceResolvers = require("./resolvers/serviceResolver");
+const reportResolvers = require("./resolvers/reportResolver");
 
-const typeDefs = [userTypedef, childTypedef, serviceTypedef];
+const typeDefs = [userTypedef, childTypedef, serviceTypedef, reportTypedef];
 
-const resolvers = [userResolvers, childResolvers, serviceResolvers];
+const resolvers = [
+    userResolvers,
+    childResolvers,
+    serviceResolvers,
+    reportResolvers,
+];
 
 const server = new ApolloServer({
     typeDefs,

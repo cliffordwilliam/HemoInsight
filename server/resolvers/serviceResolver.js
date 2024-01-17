@@ -23,9 +23,8 @@ const serviceQueries = {
     },
     serviceByName: async (_parent, args) => {
         try {
-            const service = await Service.findOneByName({
-                title: args.title,
-            });
+            const service = await Service.findOneByName(args.title);
+            console.log(service);
             return service;
         } catch (error) {
             throw error;

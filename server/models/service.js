@@ -27,7 +27,14 @@ module.exports = class Service {
     //SEARCH here
     static async findOneByName(query) {
         try {
-            return await this.collection().findOne({ title: query.title });
+            return await this.collection()
+                .find({
+                    $or: [
+                        { title: { $regex: query, $options: "i" } },
+                        { description: { $regex: query, $options: "i" } },
+                    ],
+                })
+                .toArray();
         } catch (error) {
             throw error;
         }
