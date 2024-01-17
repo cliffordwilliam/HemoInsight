@@ -21,6 +21,16 @@ const serviceQueries = {
             throw error;
         }
     },
+    serviceByName: async (_parent, args) => {
+        try {
+            const service = await Service.findOneByName({
+                title: args.title,
+            });
+            return service;
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 const serviceResolvers = {

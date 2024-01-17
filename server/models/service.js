@@ -23,4 +23,13 @@ module.exports = class Service {
             throw error;
         }
     }
+
+    //SEARCH here
+    static async findOneByName(query) {
+        try {
+            return await this.collection().findOne({ title: query.title });
+        } catch (error) {
+            throw error;
+        }
+    }
 };
