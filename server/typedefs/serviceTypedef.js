@@ -1,6 +1,3 @@
-const Helper = require("../helper");
-const User = require("../models/user");
-
 module.exports = serviceTypedef = `#graphql
 type Service {
     _id: ID
