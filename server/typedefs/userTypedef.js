@@ -24,6 +24,9 @@ module.exports = userTypedef = `#graphql
     username: String! # req
     password: String! # req
     email: String! # req
+    birthdate: String
+    address: String
+    commorbidity: String
   }
 
   input LoginInput {

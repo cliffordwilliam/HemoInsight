@@ -58,14 +58,14 @@ module.exports = class User {
       if (!emailRegex.test(email)) {
         Helper.error("Invalid email format", 400);
       }
-      // pass < 5? 400
-      if (password.length < 5) {
-        Helper.error("Password must be at least 5 characters long", 400);
-      }
       // name taken? 400
       const existingUser = await User.findOneBy({ username: username });
       if (existingUser) {
         Helper.error("Username is already taken", 400);
+      }
+      // pass < 5? 400
+      if (password.length < 5) {
+        Helper.error("Password must be at least 5 characters long", 400);
       }
       // hash
       payload.password = await Helper.hash(password);
