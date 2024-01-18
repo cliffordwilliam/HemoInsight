@@ -10,9 +10,6 @@ module.exports = class User {
 
   static async findAll() {
     try {
-      // return await this.collection()
-      //   .find({}, { projection: { password: 0 } })
-      //   .toArray();
       const cachedData = await redis.get("redisUser");
       if (cachedData) {
         console.log("User model -> GOT redisUser cache");

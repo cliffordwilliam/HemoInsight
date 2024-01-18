@@ -30,10 +30,10 @@ module.exports = class Helper {
   }
 
   static sign(value) {
-    return jwt.sign(value, process.env.JWT_SECRET); // payload -> token
+    return jwt.sign(value, process.env.JWT_SECRET);
   }
 
   static verify(value) {
-    return jwt.verify(value, process.env.JWT_SECRET); // token -> payload
+    return jwt.verify(value, process.env.JWT_SECRET);
   }
 };

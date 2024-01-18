@@ -5,8 +5,7 @@ const userQueries = {
   users: async () => {
     // const loggedUser = await context.tokenGuard();
     try {
-      const users = await User.findAll();
-      return users;
+      return await User.findAll();
     } catch (error) {
       throw error;
     }
@@ -17,8 +16,7 @@ const userMutations = {
   register: async (_, { payload }) => {
     // const loggedUser = await context.tokenGuard();
     try {
-      const newUser = await User.register(payload);
-      return newUser;
+      return await User.register(payload);
     } catch (error) {
       throw error;
     }
@@ -26,8 +24,7 @@ const userMutations = {
   login: async (_, { payload }) => {
     // const loggedUser = await context.tokenGuard();
     try {
-      const { user, token } = await User.login(payload);
-      return { user, token };
+      return await User.login(payload);
     } catch (error) {
       throw error;
     }

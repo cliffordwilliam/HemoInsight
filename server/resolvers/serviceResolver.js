@@ -3,38 +3,31 @@ const Helper = require("../helper");
 const Service = require("../models/service");
 
 const serviceQueries = {
-    getServices: async () => {
-        try {
-            const services = await Service.findAll();
-            return services;
-        } catch (error) {
-            throw error;
-        }
-    },
-    serviceById: async (_parent, args) => {
-        try {
-            const service = await Service.findOneBy({
-                _id: new ObjectId(args.id),
-            });
-            return service;
-        } catch (error) {
-            throw error;
-        }
-    },
-    serviceByName: async (_parent, args) => {
-        try {
-            const service = await Service.findOneByName({
-                title: args.title,
-            });
-            return service;
-        } catch (error) {
-            throw error;
-        }
-    },
+  services: async () => {
+    try {
+      return await Service.findAll();
+    } catch (error) {
+      throw error;
+    }
+  },
+  service: async (_, { id }) => {
+    try {
+      return await Service.findOneBy({ _id: new ObjectId(id) });
+    } catch (error) {
+      throw error;
+    }
+  },
+  serviceTitleDescription: async (_, { title }) => {
+    try {
+      return await Service.findTitleDescription(title);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 const serviceResolvers = {
-    Query: serviceQueries,
+  Query: serviceQueries,
 };
 
 module.exports = serviceResolvers;
