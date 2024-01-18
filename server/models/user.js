@@ -41,15 +41,6 @@ module.exports = class User {
     }
   }
 
-  static async findOneBy(query, hidePassword = true) {
-    try {
-      const projection = hidePassword ? { password: 0 } : {};
-      return await this.collection().findOne(query, { projection: projection });
-    } catch (error) {
-      throw error;
-    }
-  }
-
   static async register(payload) {
     try {
       let { username, password, email } = payload;
@@ -76,6 +67,37 @@ module.exports = class User {
       });
       const { password: _, ...userWithoutPassword } = user;
       await redis.del("redisUser");
+      return userWithoutPassword;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async register(payload) {
+    try {
+      let { username, password, email } = payload;
+      // bad email format? 400
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Helper.error("Invalid email format", 400);
+      }
+      // pass < 5? 400
+      if (password.length < 5) {
+        Helper.error("Password must be at least 5 characters long", 400);
+      }
+      // name taken? 400
+      const existingUser = await User.findOneBy({ username: username });
+      if (existingUser) {
+        Helper.error("Username is already taken", 400);
+      }
+      // hash
+      payload.password = await Helper.hash(password);
+      // POST
+      const result = await this.collection().insertOne(payload);
+      const user = await this.findOneBy({
+        _id: new ObjectId(result.insertedId),
+      });
+      const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
       throw error;
