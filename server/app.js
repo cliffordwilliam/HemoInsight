@@ -11,45 +11,54 @@ const userTypedef = require("./typedefs/userTypedef");
 const childTypedef = require("./typedefs/childTypedef");
 const serviceTypedef = require("./typedefs/serviceTypedef");
 const reportTypedef = require("./typedefs/reportTypedef");
+const reportServiceTypedef = require("./typedefs/reportServiceTypedef");
 
 // Resolvers
 const userResolvers = require("./resolvers/userResolver");
 const childResolvers = require("./resolvers/childResolver");
 const serviceResolvers = require("./resolvers/serviceResolver");
 const reportResolvers = require("./resolvers/reportResolver");
+const reportServiceResolvers = require("./resolvers/reportServiceResolver");
 
-const typeDefs = [userTypedef, childTypedef, serviceTypedef, reportTypedef];
+const typeDefs = [
+  userTypedef,
+  childTypedef,
+  serviceTypedef,
+  reportServiceTypedef,
+  reportTypedef,
+];
 
 const resolvers = [
-    userResolvers,
-    childResolvers,
-    serviceResolvers,
-    reportResolvers,
+  userResolvers,
+  childResolvers,
+  serviceResolvers,
+  reportServiceResolvers,
+  reportResolvers,
 ];
 
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    introspection: true,
+  typeDefs,
+  resolvers,
+  introspection: true,
 });
 
 (async () => {
-    try {
-        await mongoConnect.connect();
+  try {
+    await mongoConnect.connect();
 
-        const { url } = await startStandaloneServer(server, {
-            listen: {
-                port: PORT,
-            },
-            // middleware
-            context: async ({ req }) => {
-                return {
-                    tokenGuard: async () => Middleware.tokenGuard(req),
-                };
-            },
-        });
-        console.log(`Listening: ${url}`);
-    } catch (error) {
-        console.log(error);
-    }
+    const { url } = await startStandaloneServer(server, {
+      listen: {
+        port: PORT,
+      },
+      // middleware
+      context: async ({ req }) => {
+        return {
+          tokenGuard: async () => Middleware.tokenGuard(req),
+        };
+      },
+    });
+    console.log(`Listening: ${url}`);
+  } catch (error) {
+    console.log(error);
+  }
 })();

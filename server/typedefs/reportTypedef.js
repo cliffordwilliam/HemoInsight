@@ -1,52 +1,26 @@
 module.exports = reportTypedef = `#graphql
 type Report {
     _id: ID
-    patientId:ID
-    userId:ID
-    status:String
-    services:[Service]
-    result: [Result]
-    createdAt:String
-    updatedAt:String
-}
-
-type Result {
-    title:String
-    value:String
-    createdAt:String
-    updatedAt:String
+    ownerId: ID
+    status: String
+    servicesConnection: [ReportService]
+    services: [Service]
+    createdAt: String
+    updatedAt: String
+    userOwner: [User]
+    childOwner: [Child]
 }
 
 type Query{
-    getReports:[Report]
-    getReportById(reportId:ID):Report #get a single report only.
-    getReportsByPatientId(patientId:ID):[Report] #get records of report from a single person.
-
+    reports: [Report]
+    report(id: ID): Report
 }
 
 type Mutation {
-    createReport(payload: CreateReportInput): Report
+    createReport(payload: ReportInput): Report
 }
 
-
-input CreateReportInput {
-    userId:ID!
-    patientId: ID!
-    status:String
-    services:[ServicesInput]
-    results:[ResultInput]
-    createdAt:String
-    updatedAt:String
+input ReportInput {
+    ownerId: ID
 }
-
-input ServicesInput {
-    title: String
-
-}
-
-input ResultInput {
-    title:String
-    value:String
-}
-
 `;
