@@ -75,6 +75,7 @@ module.exports = class User {
         _id: new ObjectId(result.insertedId),
       });
       const { password: _, ...userWithoutPassword } = user;
+      await redis.del("redisUser");
       return userWithoutPassword;
     } catch (error) {
       throw error;
