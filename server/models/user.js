@@ -2,6 +2,7 @@ const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../mongoConnect");
 const Helper = require("../helper");
 const redis = require("../redis");
+const nodemailer = require("nodemailer");
 
 module.exports = class User {
   static collection() {
@@ -74,6 +75,34 @@ module.exports = class User {
       const user = await this.findOneBy({
         _id: new ObjectId(result.insertedId),
       });
+
+      // Nodemailer
+      let transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.NODEMAILER_USER,
+          pass: process.env.NODEMAILER_PASS,
+        },
+      });
+
+      let mailOptions = {
+        from: {
+          name: "Hemo Insight",
+          address: process.env.NODEMAILER_USER,
+        },
+        to: email,
+        subject: "Welcome to Hemo Insight",
+        text: "Easier to get routine check up access. ",
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
