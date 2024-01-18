@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Button, Text, TextInput, View } from "react-native";
+import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../config/queries";
 import { LoginContext } from "../context/LoginContext";
@@ -28,6 +28,7 @@ const Login = ({ navigation }) => {
         await removeTokenLogin();
     };
     // press -> MutateLogin
+
     const mutateLogin = () => {
         MutateLogin({
             variables: {
@@ -40,8 +41,13 @@ const Login = ({ navigation }) => {
     };
     // render
     return (
-        <View>
-            <Text>Login</Text>
+        <View
+            style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <TextInput
                 style={{
                     margin: 5,
@@ -49,6 +55,7 @@ const Login = ({ navigation }) => {
                     height: 40,
                     backgroundColor: "lightgray",
                     padding: 5,
+                    borderRadius: 8,
                 }}
                 placeholder="Username"
                 value={username}
@@ -61,6 +68,7 @@ const Login = ({ navigation }) => {
                     height: 40,
                     backgroundColor: "lightgray",
                     padding: 5,
+                    borderRadius: 8,
                 }}
                 placeholder="Password"
                 secureTextEntry
@@ -68,7 +76,12 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setPassword(text)}
             />
             <Button onPress={() => mutateLogin()} title="Login" />
-            <Button onPress={() => logout()} title="Logout" />
+            <Text>Don't have an account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text style={{ color: "#3b5998", fontWeight: "bold" }}>
+                    Register
+                </Text>
+            </TouchableOpacity>
         </View>
     );
 };

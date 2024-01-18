@@ -5,6 +5,8 @@ module.exports = userTypedef = `#graphql
     password: String
     email: String
     birthdate: String
+    weight:Int
+    height:Int
     address: String
     status: String
     commorbidity: String
@@ -24,6 +26,8 @@ module.exports = userTypedef = `#graphql
     username: String! # req
     password: String! # req
     email: String! # req
+    weight:String
+    height:String
     birthdate: String
     address: String
     commorbidity: String
