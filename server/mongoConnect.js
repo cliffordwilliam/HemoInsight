@@ -2,7 +2,7 @@ require("dotenv").config();
 const { MongoClient } = require("mongodb");
 
 const uri = process.env.MONGODB_URL;
-const dbName = "hemoinsight";
+const dbName = process.env.MONGODB_NAME;
 const client = new MongoClient(uri);
 
 async function connect() {

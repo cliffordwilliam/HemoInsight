@@ -12,12 +12,12 @@ module.exports = userTypedef = `#graphql
   }
 
   type Query {
-    users: [User] # GET all
+    users: [User]
   }
 
   type Mutation {
-    register(payload: RegisterInput): User # register
-    login(payload: LoginInput): AuthPayload # login
+    register(payload: RegisterInput): User
+    login(payload: LoginInput): AuthPayload
   }
 
   input RegisterInput {
