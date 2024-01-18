@@ -9,6 +9,7 @@ type Report {
     updatedAt: String
     userOwner: [User]
     childOwner: [Child]
+    appointment: String
 }
 
 type Query{
@@ -22,5 +23,6 @@ type Mutation {
 
 input ReportInput {
     ownerId: ID
+    appointment: String
 }
 `;

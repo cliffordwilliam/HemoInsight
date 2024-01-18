@@ -72,6 +72,7 @@ module.exports = class Report {
         updatedAt: new Date(),
         userOwner: [],
         childOwner: [],
+        appointment: payload.appointment
       };
       const result = await this.collection().insertOne(formatPayload);
       return await this.findOneBy({
