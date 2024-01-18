@@ -18,11 +18,11 @@ const Login = ({ navigation }) => {
                 await setTokenLogin(res.login.token);
             }
         },
+
         onError: async (res) => {
             console.log("Login Screen -> MutateLogin onError", res);
         },
     });
-    console.log(data);
     // press -> removeTokenLogin
     const logout = async () => {
         await removeTokenLogin();
