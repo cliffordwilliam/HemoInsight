@@ -75,3 +75,58 @@ export const ADDFAMILY = gql`
         }
     }
 `;
+
+export const CREATEREPORT = gql`
+    mutation CreateReport($payload: ReportInput) {
+        createReport(payload: $payload) {
+            _id
+            ownerId
+            status
+            servicesConnection {
+                _id
+                reportId
+                serviceId
+                createdAt
+                updatedAt
+            }
+            services {
+                _id
+                title
+                description
+                price
+                clinic
+            }
+            createdAt
+            updatedAt
+            userOwner {
+                _id
+                username
+                password
+                email
+                birthdate
+                weight
+                height
+                address
+                status
+                commorbidity
+                childs {
+                    _id
+                    username
+                    birthdate
+                    address
+                    commorbidity
+                    userId
+                }
+            }
+            childOwner {
+                _id
+                username
+                birthdate
+                address
+                commorbidity
+                userId
+            }
+            appointment
+        }
+    }
+`;
