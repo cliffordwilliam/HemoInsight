@@ -21,6 +21,5 @@ module.exports = childTypedef = `#graphql
     birthdate: String! # req
     address: String! # req
     commorbidity: String! # req
-    userId: Int! # req
   }
 `;

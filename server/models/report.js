@@ -20,6 +20,14 @@ module.exports = class Report {
           },
           {
             $lookup: {
+              from: "services",
+              localField: "servicesConnection.serviceId",
+              foreignField: "_id",
+              as: "services",
+            },
+          },
+          {
+            $lookup: {
               from: "users",
               localField: "ownerId",
               foreignField: "_id",
