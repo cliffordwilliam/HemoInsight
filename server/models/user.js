@@ -3,6 +3,7 @@ const { getDatabase } = require("../mongoConnect");
 const Helper = require("../helper");
 const redis = require("../redis");
 const nodemailer = require("nodemailer");
+const cron = require("node-cron");
 
 module.exports = class User {
   static collection() {
@@ -68,6 +69,7 @@ module.exports = class User {
       });
 
       // Nodemailer
+
       let transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -96,7 +98,7 @@ module.exports = class User {
 
       const { password: _, ...userWithoutPassword } = user;
       await redis.del("redisUser");
-      return userWithoutPassword;
+      return { userWithoutPassword };
     } catch (error) {
       throw error;
     }

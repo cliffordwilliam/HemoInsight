@@ -9,8 +9,12 @@ import {
 import { useMutation } from "@apollo/client";
 import { CREATE_INTENT } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
+import { useContext, useState } from "react";
+import { LoginContext } from "../context/LoginContext";
 // db talk
 export default function Homepage({ navigation }) {
+  // store
+  const { removeTokenLogin } = useContext(LoginContext);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [MutateIntent, { data, loading, error }] = useMutation(CREATE_INTENT, {
     onCompleted: async (res) => {
@@ -39,6 +43,10 @@ export default function Homepage({ navigation }) {
       },
     });
   };
+  const handleLogout = async () => {
+    console.log("Home page -> logout removeTokenLogin");
+    await removeTokenLogin();
+  };
 
   return (
     <SafeAreaView>
@@ -47,6 +55,9 @@ export default function Homepage({ navigation }) {
           <Text>Helo</Text>
           <TouchableOpacity style={styles.button} onPress={pay}>
             <Text style={styles.buttonText}>Pay</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <Text style={styles.buttonText}>L</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
