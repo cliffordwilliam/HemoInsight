@@ -67,9 +67,16 @@ module.exports = class Stripe {
           }
         );
 
-        const task = cron.schedule("5 5 * * *", function () {
-          transporterReminder.then(console.log("success send email"));
-        });
+        const task = cron.schedule(
+          "35 17 * * *",
+          function () {
+            transporterReminder.then(console.log("success send email"));
+          },
+          {
+            scheduled: true,
+            timezone: "Asia/Jakarta",
+          }
+        );
 
         task.start();
       }
