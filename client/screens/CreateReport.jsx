@@ -9,15 +9,24 @@ import {
     TouchableOpacity,
 } from "react-native";
 
-import { ADD_SERVICES, GETSERVICES, SERVICETITLEDESC } from "../config/queries";
+import {
+    ADD_SERVICES,
+    GETSERVICES,
+    GET_REPORT_BY_ID,
+    SERVICETITLEDESC,
+} from "../config/queries";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { useState } from "react";
 
 export default function CreateReport({ navigation, route }) {
     const ReportId = route.params.data;
-
     const [servicesData, setServicesData] = useState([]);
     const [title, setTitle] = useState("");
+
+    //Get Report by Id
+    const { data: ReportById } = useQuery(GET_REPORT_BY_ID, {
+        variables: { reportId: ReportId[0]?._id },
+    });
 
     // press -> add services
     const addServices = (id) => {
@@ -35,8 +44,9 @@ export default function CreateReport({ navigation, route }) {
         ADD_SERVICES,
         {
             onCompleted: () => {
-                console.log("ini add services", AddServiceResponse);
+                console.log("Add Services Success", AddServiceResponse);
             },
+            refetchQueries: [GET_REPORT_BY_ID],
         }
     );
 
@@ -96,13 +106,13 @@ export default function CreateReport({ navigation, route }) {
                 <View
                     style={{
                         width: 410,
-                        height: 300,
+                        height: 1000,
                         backgroundColor: "lightblue",
                         alignSelf: "center",
                         borderRadius: 5,
                     }}
                 >
-                    <Text>test</Text>
+                    <Text>{JSON.stringify(ReportById?.report, null, 2)}</Text>
                 </View>
 
                 {/* services container */}

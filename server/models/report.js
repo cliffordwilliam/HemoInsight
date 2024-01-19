@@ -56,7 +56,52 @@ module.exports = class Report {
 
     static async findOneBy(query) {
         try {
-            return await this.collection().findOne(query);
+            return await this.collection()
+                .aggregate([
+                    {
+                        $match: {
+                            _id: query._id,
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "reportServices",
+                            localField: "_id",
+                            foreignField: "reportId",
+                            as: "servicesConnection",
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "services",
+                            localField: "servicesConnection.serviceId",
+                            foreignField: "_id",
+                            as: "services",
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "ownerId",
+                            foreignField: "_id",
+                            as: "userOwner",
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "childs",
+                            localField: "ownerId",
+                            foreignField: "_id",
+                            as: "childOwner",
+                        },
+                    },
+                    {
+                        $project: {
+                            "userOwner.password": 0,
+                        },
+                    },
+                ])
+                .toArray();
         } catch (error) {
             throw error;
         }

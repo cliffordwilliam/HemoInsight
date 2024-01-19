@@ -179,3 +179,58 @@ export const ADD_SERVICES = gql`
         }
     }
 `;
+
+export const GET_REPORT_BY_ID = gql`
+    query Report($reportId: ID) {
+        report(id: $reportId) {
+            _id
+            ownerId
+            status
+            servicesConnection {
+                _id
+                reportId
+                serviceId
+                createdAt
+                updatedAt
+            }
+            services {
+                _id
+                title
+                description
+                price
+                clinic
+            }
+            createdAt
+            updatedAt
+            userOwner {
+                _id
+                username
+                password
+                email
+                birthdate
+                weight
+                height
+                address
+                status
+                commorbidity
+                childs {
+                    _id
+                    username
+                    birthdate
+                    address
+                    commorbidity
+                    userId
+                }
+            }
+            childOwner {
+                _id
+                username
+                birthdate
+                address
+                commorbidity
+                userId
+            }
+            appointment
+        }
+    }
+`;
