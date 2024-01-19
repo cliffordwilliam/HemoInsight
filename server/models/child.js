@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { getDatabase } = require("../mongoConnect");
 const Helper = require("../helper");
-
+const redis = require("../redis");
 module.exports = class Child {
     static collection() {
         return getDatabase().collection("childs");
