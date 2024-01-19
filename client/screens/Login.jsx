@@ -1,89 +1,107 @@
 import React, { useContext, useState } from "react";
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../config/queries";
 import { LoginContext } from "../context/LoginContext";
 
-const Login = ({ navigation }) => {
-    // store
-    const { setTokenLogin, removeTokenLogin } = useContext(LoginContext);
-    // state
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    // db talk
-    const [MutateLogin, { data, loading, error }] = useMutation(LOGIN, {
-        onCompleted: async (res) => {
-            console.log("Login Screen -> MutateLogin onCompleted", res);
-            if (res?.login?.token) {
-                await setTokenLogin(res.login.token);
-            }
+export default function Login({ navigation }) {
+  // store
+  const { setTokenLogin } = useContext(LoginContext);
+  // state
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  // db talk
+  const [MutateLogin, { data, loading, error }] = useMutation(LOGIN, {
+    onCompleted: async (res) => {
+      console.log("Login Screen -> MutateLogin onCompleted", res);
+      if (res?.login?.token) {
+        await setTokenLogin(res.login.token);
+      }
+    },
+    onError: async (res) => {
+      console.log("Login Screen -> MutateLogin onError", res);
+    },
+  });
+  // press -> MutateLogin
+  const mutateLogin = () => {
+    MutateLogin({
+      variables: {
+        payload: {
+          username,
+          password,
         },
-
-        onError: async (res) => {
-            console.log("Login Screen -> MutateLogin onError", res);
-        },
+      },
     });
-    // press -> removeTokenLogin
-    const logout = async () => {
-        await removeTokenLogin();
-    };
-    // press -> MutateLogin
+  };
+  // render
+  return (
+    <SafeAreaView style={styles.centerCon}>
+      <View style={styles.centerCon}>
+        {/* username */}
+        <TextInput
+          style={styles.textInput}
+          placeholder="Username"
+          value={username}
+          onChangeText={(text) => setUsername(text)}
+        />
+        {/* password */}
+        <TextInput
+          style={styles.textInput}
+          placeholder="Password"
+          secureTextEntry
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+        {/* button submit */}
+        <Button
+          style={styles.button}
+          onPress={() => mutateLogin()}
+          title="Login"
+        />
+        {/* kick register */}
+        <Text>Don't have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <Text style={styles.link}>Register</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
 
-    const mutateLogin = () => {
-        MutateLogin({
-            variables: {
-                payload: {
-                    username,
-                    password,
-                },
-            },
-        });
-    };
-    // render
-    return (
-        <View
-            style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <TextInput
-                style={{
-                    margin: 5,
-                    width: 140,
-                    height: 40,
-                    backgroundColor: "lightgray",
-                    padding: 5,
-                    borderRadius: 8,
-                }}
-                placeholder="Username"
-                value={username}
-                onChangeText={(text) => setUsername(text)}
-            />
-            <TextInput
-                style={{
-                    margin: 5,
-                    width: 140,
-                    height: 40,
-                    backgroundColor: "lightgray",
-                    padding: 5,
-                    borderRadius: 8,
-                }}
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-            />
-            <Button onPress={() => mutateLogin()} title="Login" />
-            <Text>Don't have an account?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={{ color: "#3b5998", fontWeight: "bold" }}>
-                    Register
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-};
-
-export default Login;
+const styles = StyleSheet.create({
+  textInput: {
+    margin: 5,
+    width: 200,
+    height: 40,
+    backgroundColor: "lightgray",
+    padding: 5,
+    borderRadius: 8,
+  },
+  centerCon: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    margin: 5,
+    width: 80,
+    height: 40,
+    backgroundColor: "lightblue",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  link: {
+    color: "#3b5998",
+    fontWeight: "bold",
+  },
+});

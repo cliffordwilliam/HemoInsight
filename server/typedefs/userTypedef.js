@@ -15,6 +15,7 @@ module.exports = userTypedef = `#graphql
 
   type Query {
     users: [User]
+    loggedIn: [User]
   }
 
   type Mutation {

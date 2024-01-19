@@ -1,413 +1,233 @@
 import {
-    StyleSheet,
-    Text,
-    View,
-    SafeAreaView,
-    ScrollView,
-    Pressable,
-    TextInput,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Pressable,
+  TextInput,
 } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
-import { GETSERVICES, ADDFAMILY } from "../config/queries";
+import { GETSERVICES, ADDFAMILY, LOGGEDINUSER } from "../config/queries";
 import { useQuery, useMutation } from "@apollo/client";
 
 export default function Homepage({ navigation }) {
-    const [servicesData, setServicesData] = useState([]);
-    const [familyMember, setFamilyMember] = useState({
-        username: "",
-        birthdate: "",
-        address: "",
-        commorbidity: "",
+  // state
+  const [servicesData, setServicesData] = useState([]);
+  const [familyMember, setFamilyMember] = useState({
+    username: "",
+    birthdate: "",
+    address: "",
+    commorbidity: "",
+  });
+  const [loggedinUser, setLoggedinUser] = useState({});
+  // store
+  const { removeTokenLogin } = useContext(LoginContext);
+  // press -> Logout
+  const handleLogout = async () => {
+    console.log("Home page -> logout removeTokenLogin");
+    await removeTokenLogin();
+  };
+  // get Services Data
+  const { data: Services } = useQuery(GETSERVICES, {
+    onCompleted: (res) => {
+      console.log("Home page -> onCompleted QueryGETSERVICES", res);
+      setServicesData(Services.services);
+    },
+  });
+  // get logged in user Data
+  const { data: LoggedinUserData } = useQuery(LOGGEDINUSER, {
+    onCompleted: (res) => {
+      console.log("Home page -> onCompleted QueryLOGGEDINUSER", res);
+      setLoggedinUser(LoggedinUserData.loggedIn);
+    },
+  });
+  // add Family Member
+  const handleChangeInput = (value, key) => {
+    setFamilyMember({
+      ...familyMember,
+      [key]: value,
     });
-
-    //Logout Section
-    const { removeTokenLogin } = useContext(LoginContext);
-    const handleLogout = async () => {
-        console.log("Home screen logout");
-        await removeTokenLogin();
-    };
-
-    //Get Services Data
-    const { data: Services } = useQuery(GETSERVICES, {
-        onCompleted: () => {
-            console.log(`success retrieving data`);
-            setServicesData(Services.services);
+  };
+  // db talk
+  const [MutateFamMember, { data: AddFamilyResponse }] = useMutation(
+    ADDFAMILY,
+    {
+      onCompleted: (res) => {
+        console.log("Home page -> onCompleted ADDFAMILY", res);
+      },
+    }
+  );
+  // press -> MutateFamMember
+  const AddFamilyMemberAction = () => {
+    MutateFamMember({
+      variables: {
+        payload: {
+          username: familyMember.username,
+          birthdate: familyMember.birthdate,
+          address: familyMember.address,
+          commorbidity: familyMember.commorbidity,
         },
+      },
     });
-
-    //Add Family Member
-    const handleChangeInput = (value, key) => {
-        setFamilyMember({
-            ...familyMember,
-            [key]: value,
-        });
-    };
-
-    const [MutateFamMember, { data: AddFamilyResponse }] = useMutation(
-        ADDFAMILY,
-        {
-            onCompleted: () => {
-                console.log(AddFamilyResponse);
-            },
-        }
-    );
-
-    const AddFamilyMemberAction = async () => {
-        try {
-            await MutateFamMember({
-                variables: {
-                    payload: {
-                        username: familyMember.username,
-                        birthdate: familyMember.birthdate,
-                        address: familyMember.address,
-                        commorbidity: familyMember.commorbidity,
-                    },
-                },
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    };
-    return (
-        <SafeAreaView>
-            <ScrollView>
-                <View
-                    style={{
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 3,
-                        marginTop: 10,
-                    }}
-                >
-                    <View
-                        style={{
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: 370,
-                            height: 250,
-                            backgroundColor: "teal",
-                            borderRadius: 20,
-                        }}
-                    >
-                        <Text style={{ textAlign: "center" }}>
-                            User Profile Card here{" "}
-                        </Text>
-                    </View>
-
-                    <View
-                        style={{
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <View
-                            style={{
-                                width: 350,
-                                height: 350,
-                                backgroundColor: "lightblue",
-                                borderRadius: 20,
-                                marginHorizontal: 4,
-                                marginVertical: 10,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Text>My Family Member</Text>
-                            <TextInput
-                                style={{
-                                    margin: 5,
-                                    width: 200,
-                                    height: 40,
-                                    backgroundColor: "white",
-                                    padding: 5,
-                                    borderRadius: 8,
-                                }}
-                                placeholder="Username"
-                                onChangeText={(text) =>
-                                    handleChangeInput(text, "username")
-                                }
-                            />
-                            <TextInput
-                                style={{
-                                    margin: 5,
-                                    width: 200,
-                                    height: 40,
-                                    backgroundColor: "white",
-                                    padding: 5,
-                                    borderRadius: 8,
-                                }}
-                                placeholder="Birthdate"
-                                onChangeText={(text) =>
-                                    handleChangeInput(text, "birthdate")
-                                }
-                            />
-                            <TextInput
-                                style={{
-                                    margin: 5,
-                                    width: 200,
-                                    height: 40,
-                                    backgroundColor: "white",
-                                    padding: 5,
-                                    borderRadius: 8,
-                                }}
-                                placeholder="Address"
-                                onChangeText={(text) =>
-                                    handleChangeInput(text, "address")
-                                }
-                            />
-                            <TextInput
-                                style={{
-                                    margin: 5,
-                                    width: 200,
-                                    height: 40,
-                                    backgroundColor: "white",
-                                    padding: 5,
-                                    borderRadius: 8,
-                                }}
-                                placeholder="Comorbidity"
-                                onChangeText={(text) =>
-                                    handleChangeInput(text, "commorbidity")
-                                }
-                            />
-
-                            <Pressable
-                                onPress={AddFamilyMemberAction}
-                                style={{
-                                    width: 60,
-                                    height: 30,
-                                    backgroundColor: "teal",
-                                    borderRadius: 7,
-                                }}
-                            >
-                                <Text>Submit</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-around",
-                            gap: 6,
-                        }}
-                    >
-                        <View>
-                            <Pressable
-                                onClick
-                                style={{
-                                    width: 110,
-                                    height: 110,
-                                    backgroundColor: "lightblue",
-                                    borderRadius: 20,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Text style={{ fontSize: 17, padding: 4 }}>
-                                    My Health Record
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        <View>
-                            <Pressable
-                                style={{
-                                    width: 110,
-                                    height: 110,
-                                    backgroundColor: "lightblue",
-                                    borderRadius: 20,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 17,
-                                        padding: 2,
-                                        marginHorizontal: 2,
-                                    }}
-                                >
-                                    Create Appointment
-                                </Text>
-                            </Pressable>
-                        </View>
-                        <View>
-                            <Pressable
-                                onPress={handleLogout}
-                                style={{
-                                    width: 110,
-                                    height: 110,
-                                    backgroundColor: "pink",
-                                    borderRadius: 20,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 17,
-                                        padding: 4,
-                                    }}
-                                >
-                                    Logout
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-
-                <View
-                    style={{
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                        marginTop: 10,
-                    }}
-                >
-                    {servicesData.map((service) => {
-                        return (
-                            <View
-                                style={{
-                                    width: 300,
-                                    height: 280,
-                                    borderColor: "lightblue",
-                                    borderWidth: 5,
-                                    borderRadius: 10,
-                                    flexDirection: "column",
-                                    alignContent: "flex-start",
-                                    marginVertical: 5,
-                                    padding: 10,
-                                    justifyContent: "space-between",
-                                }}
-                                key={service._id}
-                            >
-                                <Text
-                                    style={{ fontWeight: "700", fontSize: 20 }}
-                                >
-                                    {service.title}
-                                </Text>
-                                <Text>Clinic: {service.clinic}</Text>
-                                <Text
-                                    style={{
-                                        backgroundColor: "lightgray",
-                                        padding: 9,
-                                        margin: 8,
-                                    }}
-                                >
-                                    {service.description}
-                                </Text>
-                                <Text>Price: Rp{service.price},000</Text>
-                            </View>
-                        );
-                    })}
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+  };
+  // render
+  return (
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.con}>
+          {/* profile card */}
+          <View style={styles.profileCard}>
+            <Text>username: {loggedinUser.username}</Text>
+            <Text>email: {loggedinUser.email}</Text>
+            <Text>birthdate: {loggedinUser.birthdate}</Text>
+            <Text>weight: {loggedinUser.weight}</Text>
+            <Text>height: {loggedinUser.height}</Text>
+            <Text>address: {loggedinUser.address}</Text>
+            <Text>status: {loggedinUser.status}</Text>
+            <Text>commorbidity: {loggedinUser.commorbidity}</Text>
+          </View>
+          {/* add fam form */}
+          <View style={styles.addFamForm}>
+            {/* title */}
+            <Text>Add Family Member</Text>
+            {/* username */}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Username"
+              onChangeText={(text) => handleChangeInput(text, "username")}
+            />
+            {/* birthdate */}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Birthdate"
+              onChangeText={(text) => handleChangeInput(text, "birthdate")}
+            />
+            {/* address */}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Address"
+              onChangeText={(text) => handleChangeInput(text, "address")}
+            />
+            {/* commorbidity */}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Commorbidity"
+              onChangeText={(text) => handleChangeInput(text, "commorbidity")}
+            />
+            {/* submit */}
+            <Pressable onPress={AddFamilyMemberAction} style={styles.button}>
+              <Text>Submit</Text>
+            </Pressable>
+          </View>
+          {/* page button container */}
+          <View style={styles.hflex}>
+            {/* record */}
+            <Pressable style={styles.pageButton}>
+              <Text>My Health Record</Text>
+            </Pressable>
+            {/* appointment */}
+            <Pressable style={styles.pageButton}>
+              <Text>Create Appointment</Text>
+            </Pressable>
+            {/* logout */}
+            <Pressable style={styles.pageButton}>
+              <Text>Logout</Text>
+            </Pressable>
+          </View>
+        </View>
+        {/* services container */}
+        <View style={styles.con}>
+          {/* service card */}
+          {servicesData.map((service) => {
+            return (
+              <View style={styles.serviceCard} key={service._id}>
+                <Text style={styles.serviceCardTitle}>{service.title}</Text>
+                <Text>Clinic: {service.clinic}</Text>
+                <Text style={styles.serviceCardContent}>
+                  {service.description}
+                </Text>
+                <Text>Price: Rp{service.price},000</Text>
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    logo: {
-        position: "absolute",
-        left: 14,
-        top: 14,
-        fontFamily: "AvenirNext-DemiBold",
-        fontSize: 34,
-        fontWeight: "bold",
-        color: "#3b5998",
-    },
-    icon: {
-        left: 320,
-        top: 14,
-        width: 36,
-        height: 36,
-        borderRadius: "50",
-        borderWidth: 2,
-        borderColor: "lightgray",
-        backgroundColor: "lightgray",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: 8,
-    },
-
-    iconPosition: {
-        flexDirection: "row",
-    },
-    headingContainer: {
-        marginTop: 21,
-        padding: 10,
-        top: 3,
-        flexDirection: "row",
-        gap: 21,
-        alignItems: "center",
-        marginLeft: 10,
-    },
-    PostCardUser: {
-        top: 3,
-        flexDirection: "row",
-        gap: 21,
-        alignItems: "center",
-        marginLeft: 10,
-    },
-
-    writePost: {
-        fontFamily: "AvenirNext-DemiBold",
-        fontSize: 17,
-    },
-    imageProfile: {
-        width: 43,
-        height: 43,
-        borderRadius: 50,
-    },
-    separator: {
-        height: 8,
-        marginVertical: 12,
-        backgroundColor: "lightgray",
-    },
-    secondarySeperator: {
-        height: 1,
-        backgroundColor: "lightgray",
-    },
-    postSeperator: {
-        height: 9,
-        backgroundColor: "lightgray",
-        marginBottom: 13,
-    },
-
-    imagePostHeader: {
-        width: 43,
-        height: 43,
-        borderRadius: 20,
-        position: "absolute",
-        left: 20,
-    },
-    postContainer: {
-        backgroundColor: "gray",
-    },
-    postHeader: {
-        backgroundColor: "blue",
-        padding: 10,
-        marginBottom: 10,
-        fontFamily: "AvenirNext-DemiBold",
-        justifyContent: "center",
-    },
-    usernamePostHeader: {
-        marginLeft: 200,
-    },
-    footerContainer: {
-        height: 47,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center",
-    },
-    footerSubTitle: {
-        fontSize: 10,
-    },
+  con: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    padding: 10,
+  },
+  profileCard: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 250,
+    backgroundColor: "teal",
+    borderRadius: 20,
+  },
+  addFamForm: {
+    width: "100%",
+    height: 350,
+    backgroundColor: "lightblue",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textInput: {
+    margin: 5,
+    width: 200,
+    height: 40,
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: 8,
+  },
+  button: {
+    margin: 5,
+    width: 80,
+    height: 40,
+    backgroundColor: "teal",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  hflex: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 6,
+  },
+  pageButton: {
+    width: 110,
+    height: 110,
+    backgroundColor: "lightblue",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  serviceCard: {
+    width: "100%",
+    height: 280,
+    borderColor: "lightblue",
+    borderWidth: 5,
+    borderRadius: 10,
+    flexDirection: "column",
+    marginVertical: 5,
+    padding: 10,
+    justifyContent: "space-between",
+  },
+  serviceCardTitle: { fontWeight: "700", fontSize: 20 },
+  serviceCardContent: {
+    backgroundColor: "lightgray",
+    padding: 9,
+    margin: 8,
+  },
 });
