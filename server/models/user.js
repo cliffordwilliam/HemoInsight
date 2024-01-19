@@ -160,7 +160,6 @@ module.exports = class User {
 
     static async login(payload) {
         try {
-            console.log(payload, `haha`);
             const { username, password } = payload;
             // no user? 404
             let user = await User.findOneBy({ username: username }, false);

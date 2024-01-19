@@ -12,13 +12,14 @@ type Report {
     appointment: String
 }
 
+
 type Query{
     reports: [Report]
     report(id: ID): Report
 }
 
 type Mutation {
-    createReport(payload: ReportInput): Report
+    createReport(payload: ReportInput): [Report]
 }
 
 input ReportInput {

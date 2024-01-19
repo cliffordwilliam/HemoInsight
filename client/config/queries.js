@@ -88,8 +88,8 @@ export const ADDFAMILY = gql`
     }
 `;
 
-export const CREATEREPORT = gql`
-    mutation CreateReport($payload: ReportInput) {
+export const CREATE_REPORT = gql`
+    mutation Mutation($payload: ReportInput) {
         createReport(payload: $payload) {
             _id
             ownerId
@@ -164,6 +164,18 @@ export const LOGGEDINUSER = gql`
                 commorbidity
                 userId
             }
+        }
+    }
+`;
+
+export const ADD_SERVICES = gql`
+    mutation CreateReportServices($payload: ReportServiceInput) {
+        createReportServices(payload: $payload) {
+            _id
+            reportId
+            serviceId
+            createdAt
+            updatedAt
         }
     }
 `;
