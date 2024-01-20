@@ -1,6 +1,9 @@
-// https://www.npmjs.com/package/node-schedule
 module.exports = scheduleTypedef = `#graphql
   type Mutation {
-    schedule(payload: String): String
+    schedule(payload: ScheduleInput): String
   }
+  input ScheduleInput {
+    targetAddress: String! # req ccliffordwilliam@gmail.com
+    scheduleInput: String! # req HOW TO WRITE IT -> // https://www.npmjs.com/package/node-schedule
+    }
 `;
