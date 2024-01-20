@@ -1,5 +1,11 @@
 import { gql } from "@apollo/client";
 
+export const MAIL = gql`
+  mutation Mail($payload: MailInput) {
+    mail(payload: $payload)
+  }
+`;
+
 export const LOGIN = gql`
   mutation Mutation($payload: LoginInput) {
     login(payload: $payload) {

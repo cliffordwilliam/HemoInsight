@@ -7,11 +7,24 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useMutation } from "@apollo/client";
-import { CREATE_INTENT } from "../config/queries";
+import { CREATE_INTENT, MAIL } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
 // db talk
 export default function Homepage({ navigation }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  const [
+    MutateMail,
+    { data: mailData, loading: mailLoading, error: mailError },
+  ] = useMutation(MAIL, {
+    onCompleted: async () => {
+      console.log(mailData);
+    },
+    onError: async () => {
+      console.log(mailError);
+    },
+  });
+
   const [MutateIntent, { data, loading, error }] = useMutation(CREATE_INTENT, {
     onCompleted: async (res) => {
       console.log(res.createIntent.paymentIntent);
@@ -24,6 +37,15 @@ export default function Homepage({ navigation }) {
         return;
       }
       await presentPaymentSheet();
+      console.log("DONE");
+      // tembak mail sini (TODO: USE QUERY GET LOGGED IN USER MAIL)
+      MutateMail({
+        variables: {
+          payload: {
+            targetAddress: "ccliffordwilliam@gmail.com",
+          },
+        },
+      });
     },
     onError: async (res) => {
       console.log("Pay Screen -> MutateIntent onError", res);
