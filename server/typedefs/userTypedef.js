@@ -15,7 +15,7 @@ module.exports = userTypedef = `#graphql
 
   type Query {
     users: [User]
-    loggedIn: [User]
+    loggedIn: User
   }
 
   type Mutation {
@@ -27,20 +27,20 @@ module.exports = userTypedef = `#graphql
     username: String! # req
     password: String! # req
     email: String! # req
-    weight:String
-    height:String
-    birthdate: String
-    address: String
-    commorbidity: String
+    weight: String! # req
+    height: String! # req
+    birthdate: String! # req
+    address: String! # req
+    commorbidity: String! # req
   }
 
   input LoginInput {
-    username: String
-    password: String
+    username: String! # req
+    password: String! # req
   }
-
+  
   type AuthPayload {
-  user: User
-  token: String
-}
+    user: User
+    token: String
+  }
 `;

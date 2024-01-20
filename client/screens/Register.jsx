@@ -13,46 +13,37 @@ import { useMutation } from "@apollo/client";
 
 export default function Register({ navigation }) {
   // state
-  const [registerInput, setRegisterInput] = useState({
-    username: "",
-    email: "",
-    password: "",
-    birthdate: "",
-    weight: "",
-    height: "",
-    address: "",
-    commorbidity: "",
-  });
-  // state setter
-  const handleChangeInput = (value, key) => {
-    setRegisterInput({
-      ...registerInput,
-      [key]: value,
-    });
-  };
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [address, setAddress] = useState("");
+  const [commorbidity, setCommorbidity] = useState("");
   // db talk
   const [MutateRegister, { data, loading, error }] = useMutation(REGISTER, {
-    onCompleted: (res) => {
-      console.log("Register page -> onCompleted MutateRegister", res);
+    onCompleted: () => {
+      console.log("Register page -> onCompleted MutateRegister", data);
       navigation.navigate("Login");
     },
-    onError: (err) => {
-      console.log("Register page -> onError MutateRegister", err);
+    onError: () => {
+      console.log("Register page -> onError MutateRegister", error);
     },
   });
   // press -> MutateRegister
-  const RegisterAction = async () => {
+  const mutateRegister = () => {
     MutateRegister({
       variables: {
         payload: {
-          username: registerInput.username,
-          email: registerInput.email,
-          password: registerInput.password,
-          weight: registerInput.weight.toString(),
-          height: registerInput.height.toString(),
-          birthdate: registerInput.birthdate,
-          address: registerInput.address,
-          commorbidity: registerInput.commorbidity,
+          username,
+          email,
+          password,
+          weight,
+          height,
+          birthdate,
+          address,
+          commorbidity,
         },
       },
     });
@@ -65,55 +56,55 @@ export default function Register({ navigation }) {
         <TextInput
           style={styles.textInput}
           placeholder="Username"
-          onChangeText={(text) => handleChangeInput(text, "username")}
+          onChangeText={(text) => setUsername(text)}
         />
         {/* email */}
         <TextInput
           style={styles.textInput}
           placeholder="Email"
-          onChangeText={(text) => handleChangeInput(text, "email")}
+          onChangeText={(text) => setEmail(text)}
         />
         {/* password */}
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => handleChangeInput(text, "password")}
+          onChangeText={(text) => setPassword(text)}
           placeholder="Password"
           secureTextEntry
         />
         <Text>Biodata</Text>
-        {/* bday */}
+        {/* birthday */}
         <TextInput
           style={styles.textInput}
           placeholder="Birth Date"
-          onChangeText={(text) => handleChangeInput(text, "birthdate")}
+          onChangeText={(text) => setBirthdate(text)}
         />
         {/* weight */}
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => handleChangeInput(text, "weight")}
+          onChangeText={(text) => setWeight(text)}
           placeholder="Weight"
         />
         {/* height */}
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => handleChangeInput(text, "height")}
+          onChangeText={(text) => setHeight(text)}
           placeholder="Height"
         />
         {/* address */}
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => handleChangeInput(text, "address")}
+          onChangeText={(text) => setAddress(text)}
           placeholder="Address"
         />
         {/* comorbidity */}
         <TextInput
           style={styles.textInput}
-          onChangeText={(text) => handleChangeInput(text, "commorbidity")}
+          onChangeText={(text) => setCommorbidity(text)}
           placeholder="Comorbidity"
         />
         {/* button submit */}
         <View style={styles.button}>
-          <Pressable onPress={RegisterAction}>
+          <Pressable onPress={mutateRegister}>
             <Text>Submit</Text>
           </Pressable>
         </View>

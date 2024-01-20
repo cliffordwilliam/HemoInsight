@@ -7,8 +7,8 @@ type Report {
     services: [Service]
     createdAt: String
     updatedAt: String
-    userOwner: [User]
-    childOwner: [Child]
+    userOwner: User
+    childOwner: Child
     appointment: String
 }
 
@@ -19,7 +19,7 @@ type Query{
 }
 
 type Mutation {
-    createReport(payload: ReportInput): [Report]
+    createReport(payload: ReportInput): Report
 }
 
 input ReportInput {

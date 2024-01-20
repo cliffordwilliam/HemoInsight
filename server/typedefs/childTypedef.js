@@ -3,6 +3,8 @@ module.exports = childTypedef = `#graphql
     _id: ID
     username: String
     birthdate: String
+    weight:Int
+    height:Int
     address: String
     commorbidity: String
     userId: ID
@@ -19,6 +21,8 @@ module.exports = childTypedef = `#graphql
   input ChildInput {
     username: String! # req
     birthdate: String! # req
+    weight:Int! # req
+    height:Int! # req
     address: String! # req
     commorbidity: String! # req
   }
