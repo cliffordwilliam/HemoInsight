@@ -19,8 +19,9 @@ import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { useState } from "react";
 
 export default function CreateReport({ navigation, route }) {
+  // params
   const ReportId = route.params.data;
-  console.log("CREATE REPORT PAGE route.params.data", ReportId);
+  console.log("CreateReport page route.params.data", ReportId);
   const [servicesData, setServicesData] = useState([]);
   const [title, setTitle] = useState("");
 

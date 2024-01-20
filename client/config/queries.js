@@ -1,5 +1,64 @@
 import { gql } from "@apollo/client";
 
+export const REPORTS = gql`
+  query Reports {
+    reports {
+      _id
+      ownerId
+      status
+      servicesConnection {
+        _id
+        reportId
+        serviceId
+        createdAt
+        updatedAt
+      }
+      services {
+        _id
+        title
+        description
+        price
+        clinic
+      }
+      createdAt
+      updatedAt
+      userOwner {
+        _id
+        username
+        password
+        email
+        birthdate
+        weight
+        height
+        address
+        status
+        commorbidity
+        childs {
+          _id
+          username
+          birthdate
+          weight
+          height
+          address
+          commorbidity
+          userId
+        }
+      }
+      childOwner {
+        _id
+        username
+        birthdate
+        weight
+        height
+        address
+        commorbidity
+        userId
+      }
+      appointment
+    }
+  }
+`;
+
 export const LOGIN = gql`
   mutation Mutation($payload: LoginInput) {
     login(payload: $payload) {

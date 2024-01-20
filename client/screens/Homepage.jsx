@@ -73,8 +73,10 @@ export default function Homepage({ navigation }) {
           "Home page -> onCompleted MutateCREATEREPORT",
           AddReportResponse
         );
-        navigation.navigate("Appoint", {
-          data: AddReportResponse.createReport,
+
+        navigation.navigate("Reports", {
+          screen: "ReportDetail",
+          params: { reportId: AddReportResponse.createReport._id },
         });
       },
     }
