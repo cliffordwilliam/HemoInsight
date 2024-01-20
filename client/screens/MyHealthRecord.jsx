@@ -7,11 +7,72 @@ import {
     Pressable,
     TextInput,
 } from "react-native";
+import { GET_REPORT_BY_OWNERID, LOGGEDINUSER } from "../config/queries";
+import { useQuery } from "@apollo/client";
+import { useState } from "react";
+
 export default function MyHealthRecord({ navigation }) {
+    const [OwnerId, setOwnerId] = useState("");
+    const { data: FamilyMember } = useQuery(LOGGEDINUSER, {
+        onCompleted: () => {
+            console.log(`Success`);
+        },
+    });
+
+    const { data } = useQuery(GET_REPORT_BY_OWNERID, {
+        variables: { ownerId: OwnerId },
+    });
+    console.log(data?.reportsByOwnerId.length, `ni data <<<baru<<<<<`);
+
+    const getReport = async (ownerId) => {
+        setOwnerId(ownerId);
+    };
+
     return (
         <SafeAreaView>
             <ScrollView>
+                <View style={{ width: 300, backgroundColor: "lightblue" }}>
+                    <View>
+                        <Pressable
+                            onPress={() => {
+                                getReport(FamilyMember?.loggedIn?._id);
+                            }}
+                        >
+                            <Text>{FamilyMember?.loggedIn?.username}</Text>
+                        </Pressable>
+                        <Text>
+                            {FamilyMember?.loggedIn?.childs?.map((user) => {
+                                return (
+                                    <Pressable
+                                        style={{
+                                            width: 300,
+                                            height: 50,
+                                            backgroundColor: "red",
+                                        }}
+                                        onPress={() => {
+                                            getReport(user._id);
+                                        }}
+                                    >
+                                        <Text>{user?.username}</Text>
+                                    </Pressable>
+                                );
+                            })}
+                        </Text>
+                    </View>
+                </View>
                 <View>
+                    {data?.reportsByOwnerId.map((datum, index) => {
+                        return (
+                            <View>
+                                <Text>
+                                    {datum._id} Report {index + 1}
+                                </Text>
+                                <Text>{datum.username}</Text>
+                                <Text>{datum.status}</Text>
+                                <Text>{JSON.stringify(datum, null, 2)}</Text>
+                            </View>
+                        );
+                    })}
                     <Text>My Health Records</Text>
                 </View>
             </ScrollView>
