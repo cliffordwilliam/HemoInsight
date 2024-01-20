@@ -6,6 +6,7 @@ import {
     ScrollView,
     Pressable,
     TextInput,
+    Image,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
@@ -21,21 +22,18 @@ export default function Homepage({ navigation }) {
     // store
     const { removeTokenLogin } = useContext(LoginContext);
     // state
-    const [username, setUsername] = useState("");
-    const [birthdate, setBirthdate] = useState("");
-    const [weight, setWeight] = useState("");
-    const [height, setHeight] = useState("");
-    const [address, setAddress] = useState("");
-    const [commorbidity, setCommorbidity] = useState("");
+    // const [username, setUsername] = useState("");
+    // const [birthdate, setBirthdate] = useState("");
+    // const [weight, setWeight] = useState("");
+    // const [height, setHeight] = useState("");
+    // const [address, setAddress] = useState("");
+    // const [commorbidity, setCommorbidity] = useState("");
     // ONREADY get Services Data
     const { data: servicesData, loading: servicesLoading } = useQuery(
         GETSERVICES,
         {
             onCompleted: () => {
-                console.log(
-                    "Home page -> onCompleted QueryGETSERVICES",
-                    servicesData
-                );
+                console.log("Home page -> onCompleted QueryGETSERVICES");
             },
         }
     );
@@ -55,72 +53,88 @@ export default function Homepage({ navigation }) {
         await removeTokenLogin();
     };
     // db talk
-    const [MutateFamMember, { data: AddFamilyResponse }] = useMutation(
-        ADDFAMILY,
-        {
-            onCompleted: async () => {
-                console.log(
-                    "Home page -> onCompleted MutateADDFAMILY",
-                    AddFamilyResponse
-                );
-                await funcLoggedIn();
-            },
-            refetchQueries: [LOGGEDINUSER],
-        }
-    );
-    const [MutateReport, { data: AddReportResponse }] = useMutation(
-        CREATEREPORT,
-        {
-            onCompleted: async () => {
-                console.log(
-                    "Home page -> onCompleted MutateCREATEREPORT",
-                    AddReportResponse
-                );
+    // const [MutateFamMember, { data: AddFamilyResponse }] = useMutation(
+    //     ADDFAMILY,
+    //     {
+    //         onCompleted: async () => {
+    //             console.log(
+    //                 "Home page -> onCompleted MutateADDFAMILY",
+    //                 AddFamilyResponse
+    //             );
+    //             await funcLoggedIn();
+    //         },
+    //         refetchQueries: [LOGGEDINUSER],
+    //     }
+    // );
+    // const [MutateReport, { data: AddReportResponse }] = useMutation(
+    //     CREATEREPORT,
+    //     {
+    //         onCompleted: async () => {
+    //             console.log(
+    //                 "Home page -> onCompleted MutateCREATEREPORT",
+    //                 AddReportResponse
+    //             );
 
-                navigation.navigate("Reports", {
-                    screen: "ReportDetail",
-                    params: { reportId: AddReportResponse.createReport._id },
-                });
-            },
-        }
-    );
+    //             navigation.navigate("Reports", {
+    //                 screen: "ReportDetail",
+    //                 params: { reportId: AddReportResponse.createReport._id },
+    //             });
+    //         },
+    //     }
+    // );
     // press -> MutateFamMember
-    const mutateFamMember = () => {
-        MutateFamMember({
-            variables: {
-                payload: {
-                    username,
-                    weight: +weight,
-                    height: +height,
-                    birthdate,
-                    address,
-                    commorbidity,
-                },
-            },
-        });
-        setUsername("");
-        setWeight("");
-        setHeight("");
-        setBirthdate("");
-        setAddress("");
-        setCommorbidity("");
-    };
+    // const mutateFamMember = () => {
+    //     MutateFamMember({
+    //         variables: {
+    //             payload: {
+    //                 username,
+    //                 weight: +weight,
+    //                 height: +height,
+    //                 birthdate,
+    //                 address,
+    //                 commorbidity,
+    //             },
+    //         },
+    //     });
+    //     setUsername("");
+    //     setWeight("");
+    //     setHeight("");
+    //     setBirthdate("");
+    //     setAddress("");
+    //     setCommorbidity("");
+    // };
     // press -> createReport
-    const createReport = (ownerId, appointment) => {
-        MutateReport({
-            variables: {
-                payload: {
-                    ownerId,
-                    appointment,
-                },
-            },
-        });
-    };
+    // const createReport = (ownerId, appointment) => {
+    //     MutateReport({
+    //         variables: {
+    //             payload: {
+    //                 ownerId,
+    //                 appointment,
+    //             },
+    //         },
+    //     });
+    // };
 
     // render
     return (
         <SafeAreaView>
             <ScrollView>
+                <View
+                    style={
+                        (styles.con,
+                        {
+                            backgroundColor: "darkred",
+                            height: 100,
+                            borderRadius: 20,
+                            marginHorizontal: 8,
+                            marginTop: 8,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        })
+                    }
+                >
+                    <Text>Icon Here</Text>
+                </View>
                 <View style={styles.con}>
                     {/* LOGGED IN profile card */}
                     <View style={styles.profileCard}>
@@ -128,14 +142,20 @@ export default function Homepage({ navigation }) {
                             <Text>Loading...</Text>
                         ) : (
                             <>
-                                <Text>
-                                    username: {loggedInData?.loggedIn.username}
+                                <View>
+                                    <Image
+                                        style={styles.image}
+                                        source={{
+                                            uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
+                                        }}
+                                    />
+                                </View>
+                                <Text style={{ fontSize: 30 }}>
+                                    {loggedInData?.loggedIn.username}
                                 </Text>
+                                <Text>{loggedInData?.loggedIn.email}</Text>
                                 <Text>
-                                    email: {loggedInData?.loggedIn.email}
-                                </Text>
-                                <Text>
-                                    birthdate:{" "}
+                                    Birth Date:{" "}
                                     {loggedInData?.loggedIn.birthdate}
                                 </Text>
                                 <Text>
@@ -186,7 +206,7 @@ export default function Homepage({ navigation }) {
                         )}
                     </View>
                     {/* Family Member List */}
-                    <View style={styles.familyMemberForm}>
+                    {/* <View style={styles.familyMemberForm}>
                         <Text>My Family Member</Text>
                         {loggedInLoading ? (
                             <Text>Loading...</Text>
@@ -201,7 +221,7 @@ export default function Homepage({ navigation }) {
                                             <View style={styles.famCard}>
                                                 <Text>{child?.username}</Text>
                                             </View>
-                                            {/* createReport buttons */}
+                                            createReport buttons
                                             <Pressable
                                                 style={styles.famVisitButton}
                                                 onPress={() => {
@@ -229,12 +249,12 @@ export default function Homepage({ navigation }) {
                                 )}
                             </View>
                         )}
-                    </View>
+                    </View> */}
                     {/* add fam form */}
-                    <View style={styles.addFamForm}>
-                        {/* title */}
+                    {/* <View style={styles.addFamForm}>
+                        title
                         <Text>Add Family Member</Text>
-                        {/* username */}
+                        username
                         <TextInput
                             style={styles.textInput}
                             value={username}
@@ -242,64 +262,78 @@ export default function Homepage({ navigation }) {
                             placeholder="Username"
                         />
                         <Text>Biodata</Text>
-                        {/* birthday */}
+                        birthday
                         <TextInput
                             style={styles.textInput}
                             value={birthdate}
                             onChangeText={(text) => setBirthdate(text)}
                             placeholder="Birth Date"
                         />
-                        {/* weight */}
+                        weight
                         <TextInput
                             style={styles.textInput}
                             value={weight}
                             onChangeText={(text) => setWeight(text)}
                             placeholder="Weight"
                         />
-                        {/* height */}
+                        height
                         <TextInput
                             style={styles.textInput}
                             value={height}
                             onChangeText={(text) => setHeight(text)}
                             placeholder="Height"
                         />
-                        {/* address */}
+                        address
                         <TextInput
                             style={styles.textInput}
                             value={address}
                             onChangeText={(text) => setAddress(text)}
                             placeholder="Address"
                         />
-                        {/* comorbidity */}
+                        comorbidity
                         <TextInput
                             style={styles.textInput}
                             value={commorbidity}
                             onChangeText={(text) => setCommorbidity(text)}
                             placeholder="Comorbidity"
                         />
-                        {/* submit */}
+                        submit
                         <Pressable
                             onPress={mutateFamMember}
                             style={styles.button}
                         >
                             <Text>Submit</Text>
                         </Pressable>
-                    </View>
+                    </View> */}
                     {/* page button container */}
-                    <View style={styles.hflex}>
-                        {/* logout */}
-                        <Pressable
-                            style={styles.pageButton}
-                            onPress={handleLogout}
-                        >
-                            <Text>Logout</Text>
-                        </Pressable>
-                    </View>
+                </View>
+
+                <View
+                    style={
+                        (styles.con,
+                        {
+                            backgroundColor: "darkred",
+                            height: 100,
+                            borderRadius: 20,
+                            marginHorizontal: 8,
+                            marginTop: 8,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        })
+                    }
+                >
+                    <Text>Promotion Banner </Text>
+                </View>
+                <View style={styles.hflex}>
+                    {/* logout */}
+                    <Pressable style={styles.pageButton} onPress={handleLogout}>
+                        <Text>Logout</Text>
+                    </Pressable>
                 </View>
                 {/* services container */}
-                <ScrollView>
+                {/* <ScrollView>
                     <View style={styles.con}>
-                        {/* service card */}
+                        service card
                         {servicesLoading ? (
                             <Text>Loading...</Text>
                         ) : (
@@ -320,7 +354,7 @@ export default function Homepage({ navigation }) {
                             ))
                         )}
                     </View>
-                </ScrollView>
+                </ScrollView> */}
             </ScrollView>
         </SafeAreaView>
     );
@@ -361,8 +395,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
-        height: 250,
-        backgroundColor: "teal",
+        height: 400,
+        backgroundColor: "#5D88BB",
         borderRadius: 20,
     },
     addFamForm: {
@@ -404,10 +438,18 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         gap: 6,
     },
+
     pageButton: {
         width: 110,
         height: 110,
         backgroundColor: "lightblue",
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    image: {
+        width: 110,
+        height: 110,
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",

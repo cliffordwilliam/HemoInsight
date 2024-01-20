@@ -1,4 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import {
     SafeAreaView,
@@ -8,10 +8,9 @@ import {
     Pressable,
     ScrollView,
 } from "react-native";
-import { LOGGEDINUSER } from "../config/queries";
+import { CREATEREPORT, LOGGEDINUSER } from "../config/queries";
 export default function FamilyMemberList({ navigation }) {
     const [famMember, setFamMember] = useState([]);
-    console.log(famMember, `<<<<<< useState`);
     const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
         useLazyQuery(LOGGEDINUSER, {
             onCompleted: () => {
@@ -22,6 +21,34 @@ export default function FamilyMemberList({ navigation }) {
     useEffect(() => {
         funcLoggedIn();
     }, []);
+
+    const [MutateReport, { data: AddReportResponse }] = useMutation(
+        CREATEREPORT,
+        {
+            onCompleted: async () => {
+                console.log(
+                    "Home page -> onCompleted MutateCREATEREPORT",
+                    AddReportResponse
+                );
+
+                navigation.navigate("Reports", {
+                    screen: "ReportDetail",
+                    params: { reportId: AddReportResponse.createReport._id },
+                });
+            },
+        }
+    );
+
+    const createReport = (ownerId, appointment) => {
+        MutateReport({
+            variables: {
+                payload: {
+                    ownerId,
+                    appointment,
+                },
+            },
+        });
+    };
     return (
         <SafeAreaView>
             <ScrollView>
@@ -37,15 +64,98 @@ export default function FamilyMemberList({ navigation }) {
                         gap: 30,
                     }}
                 >
-                    <Text style={{ fontSize: 25 }}>Member</Text>
-                    {famMember.map((member) => {
-                        return (
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            marginHorizontal: 12,
+                            marginTop: 5,
+                        }}
+                    >
+                        <Text style={{ fontSize: 25 }}>Member</Text>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate("AddFam");
+                            }}
+                            style={{
+                                width: 35,
+                                backgroundColor: "white",
+                                height: 35,
+                                borderRadius: 50,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Text style={{ fontSize: 20 }}>{"➕"}</Text>
+                        </Pressable>
+                    </View>
+
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate("ReportListOfMember", {
+                                ownerId: loggedInData?.loggedIn?._id,
+                            });
+                        }}
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                            marginVertical: 5,
+                            marginHorizontal: 5,
+                            borderRadius: 12,
+                            padding: 20,
+                            gap: 30,
+                        }}
+                    >
+                        <Text style={{ fontSize: 20 }}>
+                            {loggedInData?.loggedIn?.username}
+                        </Text>
+                        <View>
                             <Pressable
                                 onPress={() => {
-                                    navigation.navigate("ReportListOfMember", {
-                                        ownerId: member._id,
-                                    });
+                                    createReport(
+                                        loggedInData?.loggedIn._id,
+                                        "OnSite"
+                                    );
                                 }}
+                                style={{
+                                    padding: 5,
+                                    margin: 8,
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                    width: 110,
+                                    height: 35,
+                                    fontSize: 15,
+                                    justifyContent: "center",
+                                    alignContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text>Book Test</Text>
+                            </Pressable>
+                            <View
+                                style={{
+                                    backgroundColor: "white",
+                                    padding: 5,
+                                    margin: 8,
+                                    borderWidth: 1,
+                                    borderRadius: 20,
+                                    width: 110,
+                                    height: 35,
+                                    fontSize: 15,
+                                    justifyContent: "center",
+                                    alignContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Text>Show Reports</Text>
+                            </View>
+                        </View>
+                    </Pressable>
+                    {famMember?.map((member) => {
+                        return (
+                            <View
                                 style={{
                                     flexDirection: "row",
                                     justifyContent: "space-between",
@@ -57,28 +167,59 @@ export default function FamilyMemberList({ navigation }) {
                                     padding: 20,
                                     gap: 30,
                                 }}
+                                key={member._id}
                             >
                                 <Text style={{ fontSize: 20 }}>
-                                    {member.username}
+                                    {member?.username}
                                 </Text>
-                                <View
-                                    style={{
-                                        backgroundColor: "white",
-                                        padding: 5,
-                                        margin: 8,
-                                        borderWidth: 1,
-                                        borderRadius: 20,
-                                        width: 110,
-                                        height: 50,
-                                        fontSize: 15,
-                                        justifyContent: "center",
-                                        alignContent: "center",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Text>Show Reports</Text>
+                                <View>
+                                    <Pressable
+                                        onPress={() => {
+                                            console.log("createReport");
+                                        }}
+                                        style={{
+                                            padding: 5,
+                                            margin: 8,
+                                            borderWidth: 1,
+                                            borderRadius: 20,
+                                            width: 110,
+                                            height: 35,
+                                            fontSize: 15,
+                                            justifyContent: "center",
+                                            alignContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Text>Book Test</Text>
+                                    </Pressable>
+
+                                    <Pressable
+                                        onPress={() => {
+                                            navigation.navigate(
+                                                "ReportListOfMember",
+                                                {
+                                                    ownerId: member._id,
+                                                }
+                                            );
+                                        }}
+                                        style={{
+                                            backgroundColor: "white",
+                                            padding: 5,
+                                            margin: 8,
+                                            borderWidth: 1,
+                                            borderRadius: 20,
+                                            width: 110,
+                                            height: 35,
+                                            fontSize: 15,
+                                            justifyContent: "center",
+                                            alignContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Text>Show Reports</Text>
+                                    </Pressable>
                                 </View>
-                            </Pressable>
+                            </View>
                         );
                     })}
                 </View>

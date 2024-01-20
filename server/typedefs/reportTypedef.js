@@ -16,10 +16,13 @@ type Report {
 type Query{
     reports: [Report]
     report(id: ID): Report
+    reportsByOwnerId(ownerId:ID):[Report]
+
 }
 
 type Mutation {
     createReport(payload: ReportInput): Report
+    deleteReport(reportId:ID):Report
 }
 
 input ReportInput {
