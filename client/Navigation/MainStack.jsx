@@ -20,10 +20,7 @@ const Tab = createBottomTabNavigator();
 
 const StackReport = () => {
   return (
-    <Stack.Navigator
-      initialRouteName="Login"
-      screenOptions={{ headerShown: false }}
-    >
+    <Stack.Navigator>
       <Stack.Screen name="ReportList" component={ReportList} />
       <Stack.Screen name="ReportDetail" component={ReportDetail} />
     </Stack.Navigator>

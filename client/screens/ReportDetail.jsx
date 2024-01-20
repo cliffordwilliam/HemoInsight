@@ -84,108 +84,140 @@ export default function ReportDetail({ route, navigation }) {
       refetchQueries: [GET_REPORT_BY_ID],
     }
   );
+  // get the appropriate appointment color
+  const getAppointmentColor = (appointment) => {
+    if (appointment === "OnSite") {
+      // OnSite style
+      return { color: "green" };
+      // OnVisit style
+    } else if (appointment === "OnVisit") {
+      return { color: "red" };
+    } else {
+      return {}; // default color or no additional styles
+    }
+  };
+  // get the appropriate status color
+  const getStatusColor = (status) => {
+    if (status === "unpaid") {
+      // unpaid style
+      return { color: "red", marginBottom: 10 };
+    } else if (status === "paid") {
+      // paid style
+      return { color: "green", marginBottom: 10 };
+    } else {
+      return {};
+    }
+  };
   // render
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView>
       <ScrollView>
-        {/* report card */}
-        {ReportByIdLoading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <View style={styles.reportCard}>
-            <Text style={styles.reportCardTitle}>Report Details:</Text>
-            <Text>Status: {ReportById?.report.status}</Text>
-            {/* added services */}
-            {ReportById?.report.services &&
-              ReportById.report.services.length > 0 && (
-                <React.Fragment>
-                  {/* Iterate through services array */}
-                  {ReportById.report.services.map((service) => (
-                    <View style={styles.serviceCard} key={service._id}>
-                      {/* title */}
-                      <Text style={styles.serviceCardTitle}>
-                        {service.title}
-                      </Text>
-                      {/* clinic */}
-                      <Text>Clinic: {service.clinic}</Text>
-                      {/* description */}
-                      <Text style={styles.serviceCardContent}>
-                        {service.description}
-                      </Text>
-                      {/* price */}
-                      <Text>Price: Rp{service.price},000</Text>
-                    </View>
-                  ))}
-                </React.Fragment>
+        <View style={styles.centerCon}>
+          {/* report card */}
+          {ReportByIdLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <View style={styles.reportCard}>
+              <Text style={styles.reportCardTitle}>Report Details:</Text>
+              <Text style={getStatusColor(ReportById?.report.status)}>
+                Status: {ReportById?.report.status}
+              </Text>
+              {/* added services */}
+              {ReportById?.report.services &&
+                ReportById.report.services.length > 0 && (
+                  <View style={styles.vflex}>
+                    {/* Iterate through services array */}
+                    {ReportById.report.services.map((service) => (
+                      <View style={styles.addedServiceCard} key={service._id}>
+                        {/* title */}
+                        <Text style={styles.addedServiceCardTitle}>
+                          {service.title}
+                        </Text>
+                        {/* clinic */}
+                        <Text>Clinic: {service.clinic}</Text>
+                        {/* description */}
+                        <Text style={styles.serviceCardContent}>
+                          {service.description}
+                        </Text>
+                        {/* price */}
+                        <Text>Price: Rp{service.price},000</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              {/* userOwner? */}
+              {ReportById?.report.userOwner && (
+                <View style={styles.ownerSection}>
+                  <Text style={styles.sectionTitle}>User Owner:</Text>
+                  <Text>Username: {ReportById?.report.userOwner.username}</Text>
+                  <Text>Email: {ReportById?.report.userOwner.email}</Text>
+                </View>
               )}
-
-            {ReportById?.report.userOwner && (
-              <View style={styles.ownerSection}>
-                <Text style={styles.sectionTitle}>User Owner:</Text>
-                <Text>
-                  {" "}
-                  - Username: {ReportById?.report.userOwner.username}
-                </Text>
-                <Text> - Email: {ReportById?.report.userOwner.email}</Text>
-              </View>
-            )}
-            {ReportById?.report.childOwner && (
-              <View style={styles.ownerSection}>
-                <Text style={styles.sectionTitle}>Child Owner:</Text>
-                <Text>
-                  {" "}
-                  - Username: {ReportById?.report.childOwner.username}
-                </Text>
-              </View>
-            )}
-            <Text>Appointment: {ReportById?.report.appointment}</Text>
+              {/* childOwner? */}
+              {ReportById?.report.childOwner && (
+                <View style={styles.ownerSection}>
+                  <Text style={styles.sectionTitle}>Child Owner:</Text>
+                  <Text>
+                    Username: {ReportById?.report.childOwner.username}
+                  </Text>
+                </View>
+              )}
+              {/* appointment */}
+              <Text style={getAppointmentColor(ReportById?.report.appointment)}>
+                Appointment: {ReportById?.report.appointment}
+              </Text>
+              {/* pay button = go to result page */}
+              <Pressable style={styles.button} onPress={searchServices}>
+                <Text style={styles.white}>Search</Text>
+              </Pressable>
+            </View>
+          )}
+          {/* search input container */}
+          <View style={styles.hflex}>
+            {/* search input */}
+            <TextInput
+              style={styles.textInput}
+              placeholder="Search services"
+              value={title}
+              onChangeText={(text) => setTitle(text)}
+            />
+            {/* submit button */}
+            <Pressable style={styles.button} onPress={searchServices}>
+              <Text style={styles.white}>Search</Text>
+            </Pressable>
           </View>
-        )}
-        {/* search input container */}
-        <View style={styles.hflex}>
-          {/* search input */}
-          <TextInput
-            style={styles.textInput}
-            placeholder="Search services"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
-          />
-          {/* submit button */}
-          <Pressable style={styles.button} onPress={searchServices}>
-            <Text style={styles.buttonText}>Search</Text>
-          </Pressable>
-        </View>
-        {/* services container */}
-        <View style={styles.con}>
-          {/* service card */}
-          {servicesData.map((service) => {
-            return (
-              <View style={styles.serviceCard} key={service._id}>
-                {/* title */}
-                <Text style={styles.serviceCardTitle}>{service.title}</Text>
-                {/* clinic */}
-                <Text>Clinic: {service.clinic}</Text>
-                {/* description */}
-                <Text style={styles.serviceCardContent}>
-                  {service.description}
-                </Text>
-                {/* price */}
-                <Text>
-                  Price: Rp{service.price}
-                  ,000
-                </Text>
-                {/* add button */}
-                <Pressable
-                  onPress={() => {
-                    addServices(service._id);
-                  }}
-                  style={styles.button}
-                >
-                  <Text>Add</Text>
-                </Pressable>
-              </View>
-            );
-          })}
+          {/* services container */}
+          <View style={styles.con}>
+            {/* service card */}
+            {servicesData.map((service) => {
+              return (
+                <View style={styles.serviceCard} key={service._id}>
+                  {/* title */}
+                  <Text style={styles.serviceCardTitle}>{service.title}</Text>
+                  {/* clinic */}
+                  <Text>Clinic: {service.clinic}</Text>
+                  {/* description */}
+                  <Text style={styles.serviceCardContent}>
+                    {service.description}
+                  </Text>
+                  {/* price */}
+                  <Text>
+                    Price: Rp{service.price}
+                    ,000
+                  </Text>
+                  {/* add button */}
+                  <Pressable
+                    onPress={() => {
+                      addServices(service._id);
+                    }}
+                    style={styles.button}
+                  >
+                    <Text style={styles.white}>Add</Text>
+                  </Pressable>
+                </View>
+              );
+            })}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -193,6 +225,13 @@ export default function ReportDetail({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  centerCon: {
+    flexDirection: "column",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -202,6 +241,10 @@ const styles = StyleSheet.create({
   hflex: {
     flexDirection: "row",
     justifyContent: "center",
+    gap: 6,
+  },
+  vflex: {
+    flexDirection: "column",
     gap: 6,
   },
   textInput: {
@@ -214,7 +257,6 @@ const styles = StyleSheet.create({
   },
   serviceCard: {
     width: "100%",
-    height: 380,
     borderColor: "lightblue",
     borderWidth: 5,
     borderRadius: 10,
@@ -244,8 +286,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     padding: 16,
-    margin: 8,
+    margin: 10,
     width: "100%",
+  },
+  addedServiceCard: {
+    width: "100%",
+    borderColor: "lightblue",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+  },
+  addedServiceCardTitle: {
+    fontWeight: "700",
+    fontSize: 15,
   },
   reportCardTitle: {
     fontSize: 18,
@@ -258,5 +311,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  white: {
+    color: "white",
   },
 });

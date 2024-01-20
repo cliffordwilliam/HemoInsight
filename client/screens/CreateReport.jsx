@@ -113,7 +113,6 @@ export default function CreateReport({ navigation, route }) {
             <Text style={styles.buttonText}>Search</Text>
           </TouchableOpacity>
         </View>
-
         {/* services container */}
         <View style={styles.con}>
           {/* service card */}

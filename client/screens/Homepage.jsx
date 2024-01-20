@@ -242,14 +242,6 @@ export default function Homepage({ navigation }) {
           </View>
           {/* page button container */}
           <View style={styles.hflex}>
-            {/* record */}
-            <Pressable style={styles.pageButton}>
-              <Text>My Health Record</Text>
-            </Pressable>
-            {/* appointment */}
-            <Pressable style={styles.pageButton}>
-              <Text>Create Appointment</Text>
-            </Pressable>
             {/* logout */}
             <Pressable style={styles.pageButton} onPress={handleLogout}>
               <Text>Logout</Text>
