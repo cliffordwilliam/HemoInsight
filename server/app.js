@@ -13,6 +13,7 @@ const serviceTypedef = require("./typedefs/serviceTypedef");
 const reportTypedef = require("./typedefs/reportTypedef");
 const reportServiceTypedef = require("./typedefs/reportServiceTypedef");
 const stripeTypedef = require("./typedefs/stripeTypedef");
+const mailTypedef = require("./typedefs/mailTypedef");
 
 // Resolvers
 const userResolvers = require("./resolvers/userResolver");
@@ -21,6 +22,7 @@ const serviceResolvers = require("./resolvers/serviceResolver");
 const reportResolvers = require("./resolvers/reportResolver");
 const reportServiceResolvers = require("./resolvers/reportServiceResolver");
 const stripeResolvers = require("./resolvers/stripeResolver");
+const mailResolvers = require("./resolvers/typeResolver");
 
 const typeDefs = [
   userTypedef,
@@ -29,6 +31,7 @@ const typeDefs = [
   reportServiceTypedef,
   reportTypedef,
   stripeTypedef,
+  mailTypedef,
 ];
 
 const resolvers = [
@@ -38,6 +41,7 @@ const resolvers = [
   reportServiceResolvers,
   reportResolvers,
   stripeResolvers,
+  mailResolvers,
 ];
 
 const server = new ApolloServer({
