@@ -9,6 +9,7 @@ import Pay from "../screens/Pay";
 import { useContext } from "react";
 import { LoginContext } from "../context/LoginContext";
 import Login from "../screens/Login";
+import ChartPage from "../screens/Chart";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,7 +58,7 @@ export default function MainStack() {
           })}
         >
           <Tab.Screen name="Home" component={Pay} />
-          <Tab.Screen name="AddPost" component={Homepage} />
+          <Tab.Screen name="AddPost" component={ChartPage} />
           {/* Post combo */}
 
           <Tab.Screen
