@@ -48,32 +48,50 @@ module.exports = class User {
 
   static async findAll() {
     try {
-      const cachedData = await redis.get("redisUser");
-      if (cachedData) {
-        console.log("User model -> GOT redisUser cache");
-        return JSON.parse(cachedData);
-      } else {
-        console.log("User model -> NO redisUser cache");
-        const newData = await this.collection()
-          .aggregate([
-            {
-              $lookup: {
-                from: "childs",
-                localField: "_id",
-                foreignField: "userId",
-                as: "childs",
-              },
+      return await this.collection()
+        .aggregate([
+          {
+            $lookup: {
+              from: "childs",
+              localField: "_id",
+              foreignField: "userId",
+              as: "childs",
             },
-            {
-              $project: {
-                password: 0,
-              },
+          },
+          {
+            $project: {
+              password: 0,
             },
-          ])
-          .toArray();
-        await redis.set("redisUser", JSON.stringify(newData));
-        return newData;
-      }
+          },
+        ])
+        .toArray();
+      // BELOW REDIS vvv
+      // const cachedData = await redis.get("redisUser");
+      // if (cachedData) {
+      //   console.log("User model -> GOT redisUser cache");
+      //   return JSON.parse(cachedData);
+      // } else {
+      //   console.log("User model -> NO redisUser cache");
+      //   const newData = await this.collection()
+      //     .aggregate([
+      //       {
+      //         $lookup: {
+      //           from: "childs",
+      //           localField: "_id",
+      //           foreignField: "userId",
+      //           as: "childs",
+      //         },
+      //       },
+      //       {
+      //         $project: {
+      //           password: 0,
+      //         },
+      //       },
+      //     ])
+      //     .toArray();
+      //   await redis.set("redisUser", JSON.stringify(newData));
+      //   return newData;
+      // }
     } catch (error) {
       throw error;
     }

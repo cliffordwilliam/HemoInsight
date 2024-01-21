@@ -6,7 +6,9 @@ const httpLink = createHttpLink({
   uri: process.env.EXPO_PUBLIC_SERVER_URL, // TODO: move this to .env? Or change each time?
 });
 // add token to header
+console.log("BEFORE SECURE STORE HEADER");
 const authLink = setContext(async (_, { headers }) => {
+  console.log("SECURE STORE HEADER");
   const token = await SecureStore.getItemAsync("token");
   return {
     headers: {

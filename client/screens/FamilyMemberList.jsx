@@ -39,7 +39,7 @@ export default function FamilyMemberList({ navigation, route }) {
       },
     }
   );
-
+  // press -> createReport
   const createReport = (ownerId, appointment) => {
     MutateReport({
       variables: {

@@ -27,11 +27,19 @@ const StackReport = () => {
   return (
     <Stack.Navigator initialRouteName="FamilyMember">
       <Stack.Screen name="FamilyMember" component={FamilyMemberList} />
-      <Stack.Screen name="ReportListOfMember" component={ReportListOfMember} />
+      <Stack.Screen
+        name="ReportListOfMember"
+        component={ReportListOfMember}
+        options={{ headerShown: false }} // because sometimes back button is not there
+      />
       <Stack.Screen name="AddFam" component={AddFamilyMemberForm} />
       <Stack.Screen name="Geolocation" component={Geolocation} />
       <Stack.Screen name="ReportList" component={ReportList} />
-      <Stack.Screen name="ReportDetail" component={ReportDetail} />
+      <Stack.Screen
+        name="ReportDetail"
+        component={ReportDetail}
+        options={{ headerShown: false }} // because sometimes back button is not there
+      />
       <Stack.Screen name="Result" component={Result} />
     </Stack.Navigator>
   );
@@ -76,7 +84,7 @@ export default function MainStack() {
           <Tab.Screen
             name="Home"
             component={Homepage}
-            options={{ headerShown: false }}
+            options={{ headerShown: false }} // hide
           />
           {/* <Tab.Screen name="Appoint" component={CreateReport} /> */}
           {/* Post combo */}
@@ -115,18 +123,18 @@ export default function MainStack() {
               tabBarActiveTintColor: "tomato",
               tabBarInactiveTintColor: "gray",
             },
-            { tabBarStyle: { display: "none" } }
+            { tabBarStyle: { display: "none" } } // hide bottom
           )}
         >
           <Tab.Screen
             name="Register"
             component={Register}
-            options={{ headerShown: false }}
+            options={{ headerShown: false }} // hide
           />
           <Tab.Screen
             name="Login"
             component={Login}
-            options={{ headerShown: false }}
+            options={{ headerShown: false }} // hide
           />
         </Tab.Navigator>
       )}

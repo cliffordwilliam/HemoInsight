@@ -2,39 +2,65 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   ScrollView,
   Pressable,
-  TextInput,
   Image,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
-import {
-  GETSERVICES,
-  ADDFAMILY,
-  LOGGEDINUSER,
-  CREATEREPORT,
-} from "../config/queries";
-import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
+import { CREATEREPORT, LOGGEDINUSER } from "../config/queries";
+import { useLazyQuery, useMutation } from "@apollo/client";
 
 export default function Homepage({ navigation }) {
   // store
   const { removeTokenLogin } = useContext(LoginContext);
   // LAZY get loggedin
-  const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
-    useLazyQuery(LOGGEDINUSER, {
-      onCompleted: () => {
-        console.log("Home page -> onCompleted QueryLOGGEDINUSER");
-      },
-    });
+  const [
+    funcLoggedIn,
+    { data: loggedInData, loading: loggedInLoading, client: loggedInClient },
+  ] = useLazyQuery(LOGGEDINUSER, {
+    onCompleted: () => {
+      console.log("Home page -> onCompleted QueryLOGGEDINUSER", loggedInData);
+    },
+    refetchQueries: [LOGGEDINUSER],
+  });
   useEffect(() => {
     funcLoggedIn();
   }, []);
   // press -> Logout
   const handleLogout = async () => {
-    console.log("Home page -> logout removeTokenLogin");
+    console.log(
+      "Home page -> logout removeTokenLogin + RESET loggedInClient CACHE"
+    );
+    loggedInClient.clearStore(); // forget LOGGEDINUSER when logging out
     await removeTokenLogin();
+  };
+  const [MutateReport, { data: AddReportResponse }] = useMutation(
+    CREATEREPORT,
+    {
+      onCompleted: async () => {
+        console.log(
+          "Home page -> onCompleted MutateCREATEREPORT",
+          AddReportResponse
+        );
+        // kick
+        navigation.navigate("Reports", {
+          screen: "ReportDetail",
+          params: { reportId: AddReportResponse.createReport._id },
+        });
+      },
+    }
+  );
+  // press -> createReport
+  const createReport = (ownerId, appointment) => {
+    MutateReport({
+      variables: {
+        payload: {
+          ownerId,
+          appointment,
+        },
+      },
+    });
   };
   if (loggedInLoading) {
     return <Text>Loading</Text>;
@@ -232,6 +258,7 @@ const styles = StyleSheet.create({
   profileCardTopSection: {
     flexDirection: "row",
     width: "100%",
+    alignItems: "center",
   },
   profileCardTopSectionImage: {
     width: 110,
