@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 
 const StackReport = () => {
     return (
-        <Stack.Navigator initialRouteName="Geolocation">
+        <Stack.Navigator initialRouteName="FamilyMember">
             <Stack.Screen name="FamilyMember" component={FamilyMemberList} />
             <Stack.Screen
                 name="ReportListOfMember"
