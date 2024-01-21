@@ -12,7 +12,7 @@ import { DELETE_REPORT, GET_REPORT_BY_OWNERID } from "../config/queries";
 
 export default function ReportListOfMember({ navigation, route }) {
     const OwnerId = route.params.ownerId;
-
+    const [completed, setCompleted] = useState(false);
     //Get reports based on ownerId
     const { data: Reports } = useQuery(GET_REPORT_BY_OWNERID, {
         variables: {
@@ -115,27 +115,71 @@ export default function ReportListOfMember({ navigation, route }) {
                                     </Text>
                                 </Pressable>
                                 {report?.status == "paid" ? (
-                                    <View
-                                        style={{
-                                            width: "100%",
-                                            backgroundColor: "darkred",
-                                            height: 40,
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            borderRadius: 15,
-                                            top: 10,
-                                        }}
-                                    >
-                                        <Text
+                                    <>
+                                        <Pressable
+                                            onPress={() => {
+                                                setCompleted(true);
+                                                console.log("hehe");
+                                            }}
                                             style={{
-                                                color: "white",
-                                                fontSize: 15,
-                                                alignSelf: "center",
+                                                width: "100%",
+                                                backgroundColor: "darkred",
+                                                height: 40,
+                                                flexDirection: "column",
+                                                justifyContent: "center",
+                                                borderRadius: 15,
+                                                top: 10,
                                             }}
                                         >
-                                            Confirm Completion
-                                        </Text>
-                                    </View>
+                                            <Text
+                                                style={{
+                                                    color: "white",
+                                                    fontSize: 15,
+                                                    alignSelf: "center",
+                                                    fontWeight: "700",
+                                                }}
+                                            >
+                                                Confirm Completion
+                                            </Text>
+                                        </Pressable>
+                                        {completed == true ? (
+                                            <Pressable
+                                                onPress={() => {
+                                                    setCompleted(true);
+                                                    navigation.navigate(
+                                                        "Result",
+                                                        {
+                                                            reportId:
+                                                                report._id,
+                                                        }
+                                                    );
+                                                }}
+                                                style={{
+                                                    width: "100%",
+                                                    backgroundColor:
+                                                        "lightblue",
+                                                    height: 40,
+                                                    flexDirection: "column",
+                                                    justifyContent: "center",
+                                                    borderRadius: 15,
+                                                    top: 10,
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: "gray",
+                                                        fontSize: 15,
+                                                        fontWeight: "700",
+                                                        alignSelf: "center",
+                                                    }}
+                                                >
+                                                    Result
+                                                </Text>
+                                            </Pressable>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </>
                                 ) : (
                                     <View
                                         style={{
