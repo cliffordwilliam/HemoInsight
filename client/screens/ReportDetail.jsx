@@ -30,6 +30,14 @@ export default function ReportDetail({ route, navigation }) {
     GET_REPORT_BY_ID,
     {
       variables: { reportId },
+    },
+    {
+      onCompleted: () => {
+        console.log(
+          `ReportDetail page -> onCompleted QueryGET_REPORT_BY_ID`,
+          ReportById
+        );
+      },
     }
   );
   // ONREADY get Services Data
@@ -160,7 +168,7 @@ export default function ReportDetail({ route, navigation }) {
               Appointment: {ReportById?.report.appointment}
             </Text>
             {/* owner card */}
-            <View style={styles.profileCard}>
+            <View style={styles.cardBorder}>
               {ReportById?.report.userOwner && (
                 <View style={styles.profileCardTopSection}>
                   {/* owner img */}
@@ -180,7 +188,7 @@ export default function ReportDetail({ route, navigation }) {
                     <Text>
                       Birth Date: {ReportById?.report.userOwner.birthdate}
                     </Text>
-                    {/* birthdate */}
+                    {/* Commorbidity */}
                     <Text>
                       Commorbidity: {ReportById?.report.userOwner.commorbidity}
                     </Text>
@@ -236,62 +244,77 @@ export default function ReportDetail({ route, navigation }) {
               )}
               {/* childOwner? */}
               {ReportById?.report.childOwner && (
-                <View style={styles.ownerSection}>
-                  <Text style={styles.sectionTitle}>Patient Details:</Text>
-                  <Text>
-                    Full Name: {ReportById?.report.childOwner.username}
-                  </Text>
+                <View style={styles.profileCardTopSection}>
+                  {/* owner img */}
+                  <Image
+                    style={styles.profileCardTopSectionImage}
+                    source={{
+                      uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
+                    }}
+                  />
+                  {/* owner text data con */}
+                  <View style={styles.profileCardTopSectionTextCon}>
+                    {/* username */}
+                    <Text style={styles.profileCardTopSectionUsername}>
+                      {ReportById?.report.childOwner.username}
+                    </Text>
+                    {/* birthdate */}
+                    <Text>
+                      Birth Date: {ReportById?.report.childOwner.birthdate}
+                    </Text>
+                    {/* Commorbidity */}
+                    <Text>
+                      Commorbidity: {ReportById?.report.childOwner.commorbidity}
+                    </Text>
+                    {/* dot text con */}
+                    <View style={styles.profileCardTopSectionDataCon}>
+                      {/*  weight */}
+                      <View style={styles.profileCardTopSectionDataValueCon}>
+                        {/* dot */}
+                        <View
+                          style={styles.profileCardTopSectionDataDot}
+                        ></View>
+                        {/* value */}
+                        <Text style={styles.subHeader}>
+                          Weight: {ReportById?.report.childOwner.weight} cm
+                        </Text>
+                      </View>
+                      {/*  height */}
+                      <View style={styles.profileCardTopSectionDataValueCon}>
+                        {/* dot */}
+                        <View
+                          style={styles.profileCardTopSectionDataDot}
+                        ></View>
+                        {/* value */}
+                        <Text style={styles.subHeader}>
+                          Height: {ReportById?.report.childOwner.height} cm
+                        </Text>
+                      </View>
+                      {/*  created at */}
+                      <View style={styles.profileCardTopSectionDataValueCon}>
+                        {/* dot */}
+                        <View
+                          style={styles.profileCardTopSectionDataDot}
+                        ></View>
+                        {/* value */}
+                        <Text style={styles.subHeader}>
+                          Date: {formatTimestamp(ReportById?.report.createdAt)}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
                 </View>
               )}
               {/* pay button = go to result page */}
             </View>
-            <View
-              style={{
-                borderRadius: 2,
-                minHeight: 600,
-                height: "auto",
-                alignContent: "center",
-                borderWidth: 1,
-                borderColor: "gray",
-                paddingBottom: 15,
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: "400",
-                  paddingTop: 6,
-                  fontSize: 18,
-                  marginHorizontal: 5,
-                  marginTop: 10,
-                  height: 40,
-                  left: 7,
-                }}
-              >
-                Blood Test Services :
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  alignSelf: "center",
-                }}
-              >
-                <View
-                  style={{
-                    width: 350,
-                    height: 2,
-                    backgroundColor: "gray",
-                    marginVertical: 10,
-                  }}
-                ></View>
-              </View>
-
-              {/* added services */}
+            {/* added services title */}
+            <Text style={styles.titleTopPush}>Your Services :</Text>
+            {/* added services card con */}
+            <View style={styles.cardBorder}>
+              {/* added services card */}
               {ReportById?.report.services &&
                 ReportById.report.services.length > 0 && (
-                  <View style={styles.vflex}>
-                    {/* Iterate through services array */}
-
+                  <>
                     {ReportById.report.services.map((service, index) => (
                       <View style={styles.addedServiceCard} key={service._id}>
                         {/* title */}
@@ -309,103 +332,50 @@ export default function ReportDetail({ route, navigation }) {
                         </Text>
                       </View>
                     ))}
-                  </View>
+                  </>
                 )}
-              {/* userOwner? */}
             </View>
-            <View style={{ flexDirection: "column" }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-start",
-                  marginTop: 8,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    gap: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      left: 5,
-                      fontSize: 15,
-                      fontStyle: "italic",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Sub Total Rp: {subTotal}
-                    {".000"}
-                  </Text>
-                  <View>
-                    <Text
-                      style={{
-                        left: 5,
-                        fontSize: 12,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Member Disc 10%{" "}
-                    </Text>
-                    <Text
-                      style={{
-                        left: 5,
-                        fontSize: 10,
-                        fontStyle: "italic",
-                      }}
-                    >
-                      Applicable for Premium Membership only{" "}
-                    </Text>
-                  </View>
-                  <Text
-                    style={{
-                      left: 5,
-                      fontSize: 17,
-                      fontWeight: "700",
-                      fontStyle: "italic",
-                    }}
-                  >
-                    Total Rp: {subTotal * 0.9}
-                    {".000"}
-                  </Text>
-                </View>
-              </View>
-              {/* {checkout button} */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  marginTop: 8,
-                }}
-              >
-                <Pressable
-                  style={styles.button}
-                  onPress={() => {
-                    console.log(`Payment Rp ${subTotal},000`);
-                  }}
-                >
-                  <Text style={styles.white}>Checkout</Text>
-                </Pressable>
-              </View>
-            </View>
+            {/* sub total */}
+            <Text style={styles.subTotal}>
+              Sub Total Rp: {subTotal.toFixed(3)}
+            </Text>
+            {/* member disc */}
+            <Text style={styles.subTotalDisc}>Member Disc 10%</Text>
+            {/* premium */}
+            <Text style={styles.subTotalDisc}>
+              Applicable for Premium Membership only
+            </Text>
+            {/* total */}
+            <Text style={styles.total}>
+              Total Rp: {(subTotal * 0.9).toFixed(3)}
+            </Text>
+            {/* checkout button */}
+            <Pressable
+              style={styles.button}
+              onPress={() => {
+                console.log(`Payment Rp ${subTotal},000`);
+              }}
+            >
+              <Text style={styles.buttonText}>Checkout</Text>
+            </Pressable>
           </View>
         )}
-        <View style={styles.searchSection}>
-          <Text style={styles.reportCardTitle}>Look for services here</Text>
+        {/* search section card */}
+        <View style={styles.card}>
+          {/* title */}
+          <Text style={styles.title}>Look for services here</Text>
           {/* search input container */}
           <View style={styles.hflex}>
             {/* search input */}
             <TextInput
-              style={styles.textInput}
+              style={styles.input}
               placeholder="Search services"
               value={title}
               onChangeText={(text) => setTitle(text)}
             />
             {/* submit button */}
             <Pressable style={styles.button} onPress={searchServices}>
-              <Text style={styles.white}>Search</Text>
+              <Text style={styles.buttonText}>Search</Text>
             </Pressable>
           </View>
 
@@ -414,15 +384,13 @@ export default function ReportDetail({ route, navigation }) {
             {/* service card */}
             {servicesData.map((service) => {
               return (
-                <View style={styles.serviceCard} key={service._id}>
+                <View style={styles.cardBorder} key={service._id}>
                   {/* title */}
                   <Text style={styles.serviceCardTitle}>{service.title}</Text>
                   {/* clinic */}
                   <Text>Clinic: {service.clinic}</Text>
                   {/* description */}
-                  <Text style={styles.serviceCardContent}>
-                    {service.description}
-                  </Text>
+                  <Text>{service.description}</Text>
                   {/* price */}
                   <Text>
                     Price: Rp{service.price}
@@ -435,7 +403,7 @@ export default function ReportDetail({ route, navigation }) {
                     }}
                     style={styles.button}
                   >
-                    <Text style={styles.white}>Add</Text>
+                    <Text style={styles.buttonText}>Add</Text>
                   </Pressable>
                 </View>
               );
@@ -463,13 +431,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: 40,
   },
-
   background: {
     backgroundColor: "#eeeeee",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
+  },
+  titleTopPush: {
+    fontSize: 24,
+    fontWeight: "700",
+    marginTop: 16,
   },
   con: {
     flexDirection: "column",
@@ -535,63 +507,58 @@ const styles = StyleSheet.create({
     backgroundColor: "#59BB85",
     marginRight: 4,
   },
-
-  centerCon: {
-    flexDirection: "column",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  cardBorder: {
     padding: 16,
+    borderRadius: 8,
+    width: "100%",
+    flexDirection: "column",
+    backgroundColor: "white",
+    gap: 8,
+    borderColor: "lightgrey",
+    borderWidth: 1,
+  },
+  subTotal: {
+    fontSize: 15,
+    fontStyle: "italic",
+    fontWeight: "600",
+  },
+  total: {
+    fontSize: 20,
+    fontStyle: "italic",
+    fontWeight: "600",
+  },
+  subTotalDisc: {
+    fontSize: 12,
+    fontStyle: "italic",
+  },
+  button: {
+    backgroundColor: "#59BB85",
+    // width: "100%",
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "800",
+    textAlign: "center",
+  },
+  input: {
+    height: 40,
+    borderColor: "lightgray",
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    // width: "100%",
+    flex: 1,
   },
   hflex: {
     flexDirection: "row",
     justifyContent: "center",
+    alignContent: "center",
     gap: 6,
-  },
-  vflex: {
-    flexDirection: "column",
-    gap: 6,
-  },
-  textInput: {
-    margin: 5,
-    width: 200,
-    height: 40,
-    backgroundColor: "lightgray",
-    padding: 5,
-    borderRadius: 8,
-    color: "white",
-  },
-  serviceCard: {
-    width: "100%",
-    borderColor: "lightblue",
-    borderWidth: 5,
-    borderRadius: 10,
-    flexDirection: "column",
-    marginVertical: 5,
-    padding: 10,
-    justifyContent: "space-between",
-  },
-  button: {
-    margin: 5,
-    width: 80,
-    height: 40,
-    backgroundColor: "teal",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
   },
   serviceCardTitle: { fontWeight: "700", fontSize: 20 },
-  serviceCardContent: {
-    backgroundColor: "lightgray",
-    padding: 9,
-    margin: 8,
-  },
   reportCard: {
     backgroundColor: "#fff",
     borderRadius: 8,
@@ -618,29 +585,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-  },
-  ownerSection: {
-    marginTop: 10,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  white: {
-    color: "white",
-  },
-  subHeader: {
-    fontWeight: "400",
-    marginVertical: 1,
-    margin: 1,
-    fontWeight: "500",
-    padding: 1,
-  },
-  searchSection: {
-    width: "auto",
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
   },
 });
