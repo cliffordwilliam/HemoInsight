@@ -305,7 +305,6 @@ export default function ReportDetail({ route, navigation }) {
                   </View>
                 </View>
               )}
-              {/* pay button = go to result page */}
             </View>
             {/* added services title */}
             <Text style={styles.titleTopPush}>Your Services :</Text>
@@ -349,7 +348,7 @@ export default function ReportDetail({ route, navigation }) {
             <Text style={styles.total}>
               Total Rp: {(subTotal * 0.9).toFixed(3)}
             </Text>
-            {/* checkout button */}
+            {/* pay button = go to ??? */}
             <Pressable
               style={styles.button}
               onPress={() => {
