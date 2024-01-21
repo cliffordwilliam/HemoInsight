@@ -50,100 +50,106 @@ export default function Register({ navigation }) {
   };
   // render
   return (
-    <SafeAreaView style={styles.centerCon}>
-      <View style={styles.centerCon}>
-        {/* username */}
-        <TextInput
-          style={styles.textInput}
-          placeholder="Username"
-          onChangeText={(text) => setUsername(text)}
-        />
-        {/* email */}
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          onChangeText={(text) => setEmail(text)}
-        />
-        {/* password */}
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(text) => setPassword(text)}
-          placeholder="Password"
-          secureTextEntry
-        />
-        <Text>Biodata</Text>
-        {/* birthday */}
-        <TextInput
-          style={styles.textInput}
-          placeholder="Birth Date"
-          onChangeText={(text) => setBirthdate(text)}
-        />
-        {/* weight */}
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(text) => setWeight(text)}
-          placeholder="Weight"
-        />
-        {/* height */}
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(text) => setHeight(text)}
-          placeholder="Height"
-        />
-        {/* address */}
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(text) => setAddress(text)}
-          placeholder="Address"
-        />
-        {/* comorbidity */}
-        <TextInput
-          style={styles.textInput}
-          onChangeText={(text) => setCommorbidity(text)}
-          placeholder="Comorbidity"
-        />
-        {/* button submit */}
-        <View style={styles.button}>
-          <Pressable onPress={mutateRegister}>
-            <Text>Submit</Text>
-          </Pressable>
-        </View>
-        {/* kick login */}
-        <Text>Already have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Join us to start checking</Text>
+      {/* username */}
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        onChangeText={(text) => setUsername(text)}
+      />
+      {/* email */}
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={(text) => setEmail(text)}
+      />
+      {/* password */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setPassword(text)}
+        placeholder="Password"
+        secureTextEntry
+      />
+      {/* birthday */}
+      <TextInput
+        style={styles.input}
+        placeholder="Birth Date"
+        onChangeText={(text) => setBirthdate(text)}
+      />
+      {/* weight */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setWeight(text)}
+        placeholder="Weight"
+      />
+      {/* height */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setHeight(text)}
+        placeholder="Height"
+      />
+      {/* address */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setAddress(text)}
+        placeholder="Address"
+      />
+      {/* comorbidity */}
+      <TextInput
+        style={styles.input}
+        onChangeText={(text) => setCommorbidity(text)}
+        placeholder="Comorbidity"
+      />
+      {/* button submit */}
+      <Pressable onPress={mutateRegister} style={styles.button}>
+        <Text style={styles.buttonText}>Sign up</Text>
+      </Pressable>
+      {/* kick login */}
+      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.link}>Have an account? Log in</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    margin: 5,
-    width: 200,
-    height: 40,
-    backgroundColor: "lightgray",
-    padding: 5,
-    borderRadius: 8,
-  },
-  centerCon: {
+  container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    marginBottom: 16,
+    textAlign: "center",
+    fontWeight: "800",
+  },
+  input: {
+    height: 40,
+    borderColor: "lightgray",
+    borderWidth: 1,
+    marginBottom: 12,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "100%",
   },
   button: {
-    margin: 5,
-    width: 80,
-    height: 40,
-    backgroundColor: "lightblue",
+    backgroundColor: "#59BB85",
+    width: "100%",
+    padding: 10,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 12,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "800",
+    textAlign: "center",
   },
   link: {
-    color: "#3b5998",
+    marginTop: 12,
+    color: "#59BB85",
     fontWeight: "bold",
   },
 });

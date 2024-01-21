@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import {
   Button,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -41,63 +42,72 @@ export default function Login({ navigation }) {
   };
   // render
   return (
-    <SafeAreaView style={styles.centerCon}>
+    <View style={styles.container}>
+      <Text style={styles.header}>Welcome back</Text>
       {/* username */}
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={(text) => setUsername(text)}
       />
       {/* password */}
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="Password"
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
       {/* button submit */}
-      <Button
-        style={styles.button}
-        onPress={() => mutateLogin()}
-        title="Login"
-      />
+      <Pressable onPress={mutateLogin} style={styles.button}>
+        <Text style={styles.buttonText}>Sign up</Text>
+      </Pressable>
       {/* kick register */}
-      <Text>Don't have an account?</Text>
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text style={styles.link}>Register</Text>
+        <Text style={styles.link}>Don't have an account? Join us</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    margin: 5,
-    width: 200,
-    height: 40,
-    backgroundColor: "lightgray",
-    padding: 5,
-    borderRadius: 8,
-  },
-  centerCon: {
+  container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    marginBottom: 16,
+    textAlign: "center",
+    fontWeight: "800",
+  },
+  input: {
+    height: 40,
+    borderColor: "lightgray",
+    borderWidth: 1,
+    marginBottom: 12,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "100%",
   },
   button: {
-    margin: 5,
-    width: 80,
-    height: 40,
-    backgroundColor: "lightblue",
+    backgroundColor: "#59BB85",
+    width: "100%",
+    padding: 10,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 12,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "800",
+    textAlign: "center",
   },
   link: {
-    color: "#3b5998",
+    marginTop: 12,
+    color: "#59BB85",
     fontWeight: "bold",
   },
 });
