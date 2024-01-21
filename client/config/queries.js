@@ -415,3 +415,15 @@ export const DELETE_REPORT = gql`
     }
   }
 `;
+export const PAY_MAIL = gql`
+  mutation Mail($payload: MailInput) {
+    mail(payload: $payload)
+  }
+`;
+export const CREATE_INTENT = gql`
+  mutation CreateIntent($payload: IntentInput) {
+    createIntent(payload: $payload) {
+      paymentIntent
+    }
+  }
+`;

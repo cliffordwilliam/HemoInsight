@@ -16,12 +16,18 @@ import {
   GETSERVICES,
   GET_REPORT_BY_ID,
   SERVICETITLEDESC,
+  PAY_MAIL,
+  CREATE_INTENT,
 } from "../config/queries";
+import { useStripe } from "@stripe/stripe-react-native";
 
 export default function ReportDetail({ route, navigation }) {
+  // stripe
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   // params
   const { reportId } = route.params;
   // state
+  const [payAmount, setPayAmount] = useState(0);
   const [servicesData, setServicesData] = useState([]);
   const [title, setTitle] = useState("");
   let subTotal = 0; // count total price
@@ -82,6 +88,16 @@ export default function ReportDetail({ route, navigation }) {
       },
     });
   };
+  // press -> stripe
+  const stripe = (amount) => {
+    MutateIntent({
+      variables: {
+        payload: {
+          amount,
+        },
+      },
+    });
+  };
   // press -> kick old page
   const handleBackPress = () => {
     navigation.goBack();
@@ -99,6 +115,47 @@ export default function ReportDetail({ route, navigation }) {
       refetchQueries: [GET_REPORT_BY_ID],
     }
   );
+  const [MutatePayMail, { data: PayMailRes }] = useMutation(PAY_MAIL, {
+    onCompleted: () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationPAY_MAIL",
+        PayMailRes
+      );
+    },
+    refetchQueries: [GET_REPORT_BY_ID],
+  });
+  const [
+    MutateIntent,
+    { data: StripeData, loading: StripeLoading, error: StripeError },
+  ] = useMutation(CREATE_INTENT, {
+    onCompleted: async () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationCREATE_INTENT",
+        StripeData
+      );
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: "test.dev",
+        paymentIntentClientSecret: StripeData.createIntent.paymentIntent,
+      });
+      if (initResponse.error) {
+        console.log(initResponse.error);
+        return;
+      }
+      await presentPaymentSheet(); // wait here until user click pay or cancel
+      // send mail
+      MutatePayMail({
+        variables: {
+          payload: {
+            amountPaid: payAmount,
+          },
+        },
+      });
+    },
+    onError: async (res) => {
+      console.log("Pay Screen -> MutateIntent onError", res);
+    },
+  });
+
   // get the appropriate appointment color
   const getAppointmentColor = (appointment) => {
     if (appointment === "OnSite") {
@@ -352,7 +409,8 @@ export default function ReportDetail({ route, navigation }) {
             <Pressable
               style={styles.button}
               onPress={() => {
-                console.log(`Payment Rp ${subTotal},000`);
+                setPayAmount(subTotal);
+                stripe(subTotal);
               }}
             >
               <Text style={styles.buttonText}>Checkout</Text>
