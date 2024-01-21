@@ -330,6 +330,7 @@ export default function Homepage({ navigation }) {
                         <Text>Logout</Text>
                     </Pressable>
                 </View>
+
                 {/* services container */}
                 {/* <ScrollView>
                     <View style={styles.con}>
