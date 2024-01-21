@@ -1,474 +1,315 @@
 import {
-    StyleSheet,
-    Text,
-    View,
-    SafeAreaView,
-    ScrollView,
-    Pressable,
-    TextInput,
-    Image,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  Pressable,
+  TextInput,
+  Image,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
 import {
-    GETSERVICES,
-    ADDFAMILY,
-    LOGGEDINUSER,
-    CREATEREPORT,
+  GETSERVICES,
+  ADDFAMILY,
+  LOGGEDINUSER,
+  CREATEREPORT,
 } from "../config/queries";
 import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 
 export default function Homepage({ navigation }) {
-    // store
-    const { removeTokenLogin } = useContext(LoginContext);
-    // state
-    // const [username, setUsername] = useState("");
-    // const [birthdate, setBirthdate] = useState("");
-    // const [weight, setWeight] = useState("");
-    // const [height, setHeight] = useState("");
-    // const [address, setAddress] = useState("");
-    // const [commorbidity, setCommorbidity] = useState("");
-    // ONREADY get Services Data
-    const { data: servicesData, loading: servicesLoading } = useQuery(
-        GETSERVICES,
-        {
-            onCompleted: () => {
-                console.log("Home page -> onCompleted QueryGETSERVICES");
-            },
-        }
-    );
-    // LAZY get loggedin
-    const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
-        useLazyQuery(LOGGEDINUSER, {
-            onCompleted: () => {
-                console.log("Home page -> onCompleted QueryLOGGEDINUSER");
-            },
-        });
-    useEffect(() => {
-        funcLoggedIn();
-    }, []);
-    // press -> Logout
-    const handleLogout = async () => {
-        console.log("Home page -> logout removeTokenLogin");
-        await removeTokenLogin();
-    };
-    // db talk
-    // const [MutateFamMember, { data: AddFamilyResponse }] = useMutation(
-    //     ADDFAMILY,
-    //     {
-    //         onCompleted: async () => {
-    //             console.log(
-    //                 "Home page -> onCompleted MutateADDFAMILY",
-    //                 AddFamilyResponse
-    //             );
-    //             await funcLoggedIn();
-    //         },
-    //         refetchQueries: [LOGGEDINUSER],
-    //     }
-    // );
-    // const [MutateReport, { data: AddReportResponse }] = useMutation(
-    //     CREATEREPORT,
-    //     {
-    //         onCompleted: async () => {
-    //             console.log(
-    //                 "Home page -> onCompleted MutateCREATEREPORT",
-    //                 AddReportResponse
-    //             );
-
-    //             navigation.navigate("Reports", {
-    //                 screen: "ReportDetail",
-    //                 params: { reportId: AddReportResponse.createReport._id },
-    //             });
-    //         },
-    //     }
-    // );
-    // press -> MutateFamMember
-    // const mutateFamMember = () => {
-    //     MutateFamMember({
-    //         variables: {
-    //             payload: {
-    //                 username,
-    //                 weight: +weight,
-    //                 height: +height,
-    //                 birthdate,
-    //                 address,
-    //                 commorbidity,
-    //             },
-    //         },
-    //     });
-    //     setUsername("");
-    //     setWeight("");
-    //     setHeight("");
-    //     setBirthdate("");
-    //     setAddress("");
-    //     setCommorbidity("");
-    // };
-    // press -> createReport
-    // const createReport = (ownerId, appointment) => {
-    //     MutateReport({
-    //         variables: {
-    //             payload: {
-    //                 ownerId,
-    //                 appointment,
-    //             },
-    //         },
-    //     });
-    // };
-
-    // render
-    return (
-        <SafeAreaView>
-            <ScrollView>
-                <View
-                    style={
-                        (styles.con,
-                        {
-                            backgroundColor: "darkred",
-                            height: 100,
-                            borderRadius: 20,
-                            marginHorizontal: 8,
-                            marginTop: 8,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        })
-                    }
-                >
-                    <Text>Icon Here</Text>
-                </View>
-                <View style={styles.con}>
-                    {/* LOGGED IN profile card */}
-                    <View style={styles.profileCard}>
-                        {loggedInLoading ? (
-                            <Text>Loading...</Text>
-                        ) : (
-                            <>
-                                <View>
-                                    <Image
-                                        style={styles.image}
-                                        source={{
-                                            uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
-                                        }}
-                                    />
-                                </View>
-                                <Text style={{ fontSize: 30 }}>
-                                    {loggedInData?.loggedIn.username}
-                                </Text>
-                                <Text>{loggedInData?.loggedIn.email}</Text>
-                                <Text>
-                                    Birth Date:{" "}
-                                    {loggedInData?.loggedIn.birthdate}
-                                </Text>
-                                <Text>
-                                    weight: {loggedInData?.loggedIn.weight}
-                                </Text>
-                                <Text>
-                                    height: {loggedInData?.loggedIn.height}
-                                </Text>
-                                <Text>
-                                    address: {loggedInData?.loggedIn.address}
-                                </Text>
-                                <Text>
-                                    status: {loggedInData?.loggedIn.status}
-                                </Text>
-                                <Text>
-                                    commorbidity:{" "}
-                                    {loggedInData?.loggedIn.commorbidity}
-                                </Text>
-                                {/* createReport buttons */}
-                                <View style={styles.hflex}>
-                                    <Pressable
-                                        onPress={() => {
-                                            createReport(
-                                                loggedInData?.loggedIn._id,
-                                                "OnSite"
-                                            );
-                                        }}
-                                    >
-                                        <Text style={styles.visitButton}>
-                                            Onsite
-                                        </Text>
-                                    </Pressable>
-
-                                    <Pressable
-                                        onPress={() => {
-                                            createReport(
-                                                loggedInData?.loggedIn._id,
-                                                "OnVisit"
-                                            );
-                                        }}
-                                    >
-                                        <Text style={styles.visitButton}>
-                                            OnVisit
-                                        </Text>
-                                    </Pressable>
-                                </View>
-                            </>
-                        )}
+  // store
+  const { removeTokenLogin } = useContext(LoginContext);
+  // LAZY get loggedin
+  const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
+    useLazyQuery(LOGGEDINUSER, {
+      onCompleted: () => {
+        console.log("Home page -> onCompleted QueryLOGGEDINUSER");
+      },
+    });
+  useEffect(() => {
+    funcLoggedIn();
+  }, []);
+  // press -> Logout
+  const handleLogout = async () => {
+    console.log("Home page -> logout removeTokenLogin");
+    await removeTokenLogin();
+  };
+  if (loggedInLoading) {
+    return <Text>Loading</Text>;
+  }
+  // render
+  return (
+    <ScrollView style={styles.background}>
+      {/* header */}
+      <View style={styles.header}>
+        {/* text con */}
+        <View style={styles.headerTextCon}>
+          {/* user name */}
+          {loggedInLoading ? (
+            <Text style={styles.headerTextName}>Loading...</Text>
+          ) : (
+            <>
+              <Text style={styles.headerTextName}>
+                Hi {loggedInData?.loggedIn.username}!
+              </Text>
+            </>
+          )}
+          {/* welcome msg */}
+          <Text style={styles.headerTextWelcome}>Welcome to Hemo Insight</Text>
+        </View>
+        {/* logo */}
+        <Image
+          style={styles.profileImage}
+          source={{
+            uri: "https://media.discordapp.net/attachments/1156408374720737322/1197503175687688273/logo3.png?ex=65bb80bd&is=65a90bbd&hm=2830bca092551756d808d947401d7ff14014ba3e7d43d832d8a546ef0e598c0d&",
+          }}
+        />
+      </View>
+      {/* page root con */}
+      <View style={styles.con}>
+        {/* logged in profile card */}
+        <View style={styles.profileCard}>
+          {loggedInLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <>
+              {/* user text data */}
+              <View style={styles.profileCardTopSection}>
+                {/* logged in user img */}
+                <Image
+                  style={styles.profileCardTopSectionImage}
+                  source={{
+                    uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
+                  }}
+                />
+                {/* logged in user text data con */}
+                <View style={styles.profileCardTopSectionTextCon}>
+                  {/* username */}
+                  <Text style={styles.profileCardTopSectionUsername}>
+                    {loggedInData?.loggedIn.username}
+                  </Text>
+                  {/* <Text>Email: {loggedInData?.loggedIn.email}</Text> */}
+                  {/* <Text>Birth Date: {loggedInData?.loggedIn.birthdate}</Text> */}
+                  {/* <Text>Weight: {loggedInData?.loggedIn.weight}</Text> */}
+                  {/* <Text>Height: {loggedInData?.loggedIn.height}</Text> */}
+                  {/* <Text>Address: {loggedInData?.loggedIn.address}</Text> */}
+                  {/* status */}
+                  <Text style={styles.profileCardTopSectionStatus}>
+                    Status: {loggedInData?.loggedIn.status}
+                  </Text>
+                  {/* commorbidity */}
+                  <Text style={styles.profileCardTopSectionCommorbidity}>
+                    Commorbidity: {loggedInData?.loggedIn.commorbidity}
+                  </Text>
+                  {/* dot text con */}
+                  <View style={styles.profileCardTopSectionDataCon}>
+                    {/*  weight */}
+                    <View style={styles.profileCardTopSectionDataValueCon}>
+                      {/* dot */}
+                      <View style={styles.profileCardTopSectionDataDot}></View>
+                      {/* value */}
+                      <Text>Weight: {loggedInData?.loggedIn.weight}</Text>
                     </View>
-                    {/* Family Member List */}
-                    {/* <View style={styles.familyMemberForm}>
-                        <Text>My Family Member</Text>
-                        {loggedInLoading ? (
-                            <Text>Loading...</Text>
-                        ) : (
-                            <View>
-                                {loggedInData?.loggedIn?.childs?.map(
-                                    (child) => (
-                                        <View
-                                            key={child._id}
-                                            style={styles.famCon}
-                                        >
-                                            <View style={styles.famCard}>
-                                                <Text>{child?.username}</Text>
-                                            </View>
-                                            createReport buttons
-                                            <Pressable
-                                                style={styles.famVisitButton}
-                                                onPress={() => {
-                                                    createReport(
-                                                        child._id,
-                                                        "OnSite"
-                                                    );
-                                                }}
-                                            >
-                                                <Text>On Site</Text>
-                                            </Pressable>
-                                            <Pressable
-                                                style={styles.famVisitButton}
-                                                onPress={() => {
-                                                    createReport(
-                                                        child._id,
-                                                        "OnVisit"
-                                                    );
-                                                }}
-                                            >
-                                                <Text>On Visit</Text>
-                                            </Pressable>
-                                        </View>
-                                    )
-                                )}
-                            </View>
-                        )}
-                    </View> */}
-                    {/* add fam form */}
-                    {/* <View style={styles.addFamForm}>
-                        title
-                        <Text>Add Family Member</Text>
-                        username
-                        <TextInput
-                            style={styles.textInput}
-                            value={username}
-                            onChangeText={(text) => setUsername(text)}
-                            placeholder="Username"
-                        />
-                        <Text>Biodata</Text>
-                        birthday
-                        <TextInput
-                            style={styles.textInput}
-                            value={birthdate}
-                            onChangeText={(text) => setBirthdate(text)}
-                            placeholder="Birth Date"
-                        />
-                        weight
-                        <TextInput
-                            style={styles.textInput}
-                            value={weight}
-                            onChangeText={(text) => setWeight(text)}
-                            placeholder="Weight"
-                        />
-                        height
-                        <TextInput
-                            style={styles.textInput}
-                            value={height}
-                            onChangeText={(text) => setHeight(text)}
-                            placeholder="Height"
-                        />
-                        address
-                        <TextInput
-                            style={styles.textInput}
-                            value={address}
-                            onChangeText={(text) => setAddress(text)}
-                            placeholder="Address"
-                        />
-                        comorbidity
-                        <TextInput
-                            style={styles.textInput}
-                            value={commorbidity}
-                            onChangeText={(text) => setCommorbidity(text)}
-                            placeholder="Comorbidity"
-                        />
-                        submit
-                        <Pressable
-                            onPress={mutateFamMember}
-                            style={styles.button}
-                        >
-                            <Text>Submit</Text>
-                        </Pressable>
-                    </View> */}
-                    {/* page button container */}
-                </View>
-
-                <View
-                    style={
-                        (styles.con,
-                        {
-                            backgroundColor: "darkred",
-                            height: 100,
-                            borderRadius: 20,
-                            marginHorizontal: 8,
-                            marginTop: 8,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        })
-                    }
-                >
-                    <Text>Promotion Banner </Text>
-                </View>
-                <View style={styles.hflex}>
-                    {/* logout */}
-                    <Pressable style={styles.pageButton} onPress={handleLogout}>
-                        <Text>Logout</Text>
-                    </Pressable>
-                </View>
-                {/* services container */}
-                {/* <ScrollView>
-                    <View style={styles.con}>
-                        service card
-                        {servicesLoading ? (
-                            <Text>Loading...</Text>
-                        ) : (
-                            servicesData.services.map((service) => (
-                                <View
-                                    style={styles.serviceCard}
-                                    key={service._id}
-                                >
-                                    <Text style={styles.serviceCardTitle}>
-                                        {service.title}
-                                    </Text>
-                                    <Text>Clinic: {service.clinic}</Text>
-                                    <Text style={styles.serviceCardContent}>
-                                        {service.description}
-                                    </Text>
-                                    <Text>Price: Rp{service.price},000</Text>
-                                </View>
-                            ))
-                        )}
+                    {/*  weight */}
+                    <View style={styles.profileCardTopSectionDataValueCon}>
+                      {/* dot */}
+                      <View style={styles.profileCardTopSectionDataDot}></View>
+                      {/* value */}
+                      <Text>Height: {loggedInData?.loggedIn.height}</Text>
                     </View>
-                </ScrollView> */}
-            </ScrollView>
-        </SafeAreaView>
-    );
+                  </View>
+                </View>
+              </View>
+              {/* createReport buttons con */}
+              <View style={styles.profileCardTopSectionButtonCon}>
+                {/* onSite */}
+                <Pressable
+                  style={styles.button}
+                  onPress={() => {
+                    createReport(loggedInData?.loggedIn._id, "OnSite");
+                  }}
+                >
+                  <Text style={styles.buttonText}>Onsite</Text>
+                </Pressable>
+                {/* onVisit */}
+                <Pressable
+                  style={styles.button}
+                  onPress={() => {
+                    createReport(loggedInData?.loggedIn._id, "OnVisit");
+                  }}
+                >
+                  <Text style={styles.buttonText}>OnVisit</Text>
+                </Pressable>
+              </View>
+            </>
+          )}
+        </View>
+        {/* banner */}
+        <View style={styles.bannerCard}>
+          {/* logged in user img */}
+          <Image
+            style={styles.bannerCardImage}
+            source={{
+              uri: "https://picsum.photos/id/89/800/300",
+            }}
+          />
+          {/* card body */}
+          <View style={styles.bannerCardBody}>
+            {/* title */}
+            <Text style={styles.bannerCardBodyTitle}>
+              Advanced Health Checkup
+            </Text>
+            {/* content */}
+            <Text style={styles.bannerCardBodyContent}>
+              + 10% Health cashback T&C
+            </Text>
+          </View>
+        </View>
+        <View style={styles.logoutButtonCon}>
+          {/* logout */}
+          <Pressable style={styles.button} onPress={handleLogout}>
+            <Text style={styles.buttonText}>Logout</Text>
+          </Pressable>
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-    con: {
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 10,
-        padding: 10,
-    },
-    famCon: { flexDirection: "row", gap: 4, margin: 1, alignItems: "center" },
-    visitButton: {
-        width: "auto",
-        height: 20,
-        backgroundColor: "white",
-    },
-    famCard: {
-        width: 250,
-        height: 30,
-        backgroundColor: "white",
-        borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    famVisitButton: {
-        width: "auto",
-        height: 30,
-        backgroundColor: "white",
-        borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    profileCard: {
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        height: 400,
-        backgroundColor: "#5D88BB",
-        borderRadius: 20,
-    },
-    addFamForm: {
-        width: "100%",
-        padding: 10,
-        backgroundColor: "lightblue",
-        borderRadius: 20,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    familyMemberForm: {
-        width: "100%",
-        height: 250,
-        backgroundColor: "lightblue",
-        borderRadius: 20,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 4,
-    },
-    textInput: {
-        margin: 5,
-        width: 200,
-        height: 40,
-        backgroundColor: "white",
-        padding: 5,
-        borderRadius: 8,
-    },
-    button: {
-        margin: 5,
-        width: 80,
-        height: 40,
-        backgroundColor: "teal",
-        borderRadius: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    hflex: {
-        flexDirection: "row",
-        justifyContent: "center",
-        gap: 6,
-    },
-
-    pageButton: {
-        width: 110,
-        height: 110,
-        backgroundColor: "lightblue",
-        borderRadius: 20,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    image: {
-        width: 110,
-        height: 110,
-        borderRadius: 20,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    serviceCard: {
-        width: "100%",
-        height: 280,
-        borderColor: "lightblue",
-        borderWidth: 5,
-        borderRadius: 10,
-        flexDirection: "column",
-        marginVertical: 5,
-        padding: 10,
-        justifyContent: "space-between",
-    },
-    serviceCardTitle: { fontWeight: "700", fontSize: 20 },
-    serviceCardContent: {
-        backgroundColor: "lightgray",
-        padding: 9,
-        margin: 8,
-    },
+  background: {
+    backgroundColor: "#eeeeee",
+  },
+  header: {
+    backgroundColor: "#59BB85",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 12,
+    paddingTop: 40,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+  },
+  headerTextCon: {
+    flexDirection: "column",
+  },
+  headerTextName: {
+    color: "white",
+    fontWeight: "400",
+    marginBottom: 6,
+  },
+  headerTextWelcome: {
+    color: "white",
+    fontWeight: "800",
+    fontSize: 20,
+  },
+  whiteText: {
+    color: "white",
+  },
+  profileImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 50 / 2,
+  },
+  con: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    padding: 10,
+  },
+  profileCard: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    padding: 16,
+    backgroundColor: "white",
+    borderRadius: 8,
+  },
+  profileCardTopSection: {
+    flexDirection: "row",
+    width: "100%",
+  },
+  profileCardTopSectionImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 8,
+  },
+  profileCardTopSectionTextCon: {
+    flexDirection: "collumn",
+    paddingLeft: 16,
+  },
+  profileCardTopSectionUsername: {
+    fontSize: 24,
+    fontWeight: "700",
+  },
+  profileCardTopSectionStatus: {
+    fontWeight: "500",
+    color: "#59BB85",
+  },
+  profileCardTopSectionCommorbidity: {
+    marginTop: 4,
+  },
+  profileCardTopSectionDataCon: {
+    flexDirection: "row",
+    gap: 16,
+    marginTop: 8,
+  },
+  profileCardTopSectionDataValueCon: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  profileCardTopSectionDataDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 10 / 2,
+    backgroundColor: "#59BB85",
+    marginRight: 4,
+  },
+  profileCardTopSectionButtonCon: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 6,
+    marginTop: 12,
+  },
+  button: {
+    backgroundColor: "#59BB85",
+    // width: "100%",
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "800",
+    textAlign: "center",
+  },
+  logoutButtonCon: {
+    width: "100%",
+  },
+  bannerCard: {
+    width: "100%",
+    borderRadius: 8,
+    overflow: "hidden",
+    backgroundColor: "white",
+  },
+  bannerCardImage: {
+    width: "100%",
+    height: 100,
+  },
+  bannerCardBody: {
+    padding: 10,
+  },
+  bannerCardBodyTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    marginBottom: 4,
+  },
+  bannerCardBodyContent: {
+    fontSize: 14,
+  },
 });
