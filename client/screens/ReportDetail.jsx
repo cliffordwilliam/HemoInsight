@@ -29,7 +29,7 @@ export default function ReportDetail({ route, navigation }) {
     // params
     const { reportId } = route.params;
     const { clinicName } = route.params;
-
+    console.log(clinicName, ` ini dariii report detail >>>>>>>>>>>>>`);
     //get services based on hospital
     const { data: ServicesByHospital } = useQuery(GETS_SERVICES_BY_HOSPITAL, {
         variables: { title: clinicName },

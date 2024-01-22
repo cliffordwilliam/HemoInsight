@@ -2,9 +2,9 @@ import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import MapView from "react-native-maps";
 import { Marker, Callout, Circle } from "react-native-maps";
-
+import { CREATEREPORT, LOGGEDINUSER } from "../config/queries";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import * as Location from "expo-location";
 
 const dataHospital = [
@@ -79,10 +79,56 @@ const dataHospital = [
             "Jl. Pjka, Serpong, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
     },
 ];
-export default function Geolocation({ navigation }) {
+export default function Geolocation({ navigation, route }) {
+    const [labQuery, setLabQuery] = useState("");
+    //create report
+    const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
+        useLazyQuery(LOGGEDINUSER, {
+            fetchPolicy: "network-only",
+            onCompleted: () => {
+                console.log(
+                    "Home page -> onCompleted QueryLOGGEDINUSER",
+                    loggedInData
+                );
+            },
+            refetchQueries: [LOGGEDINUSER],
+        });
+    useEffect(() => {
+        funcLoggedIn();
+    }, [route]);
+    const [MutateReport, { data: AddReportResponse }] = useMutation(
+        CREATEREPORT,
+        {
+            onCompleted: async () => {
+                console.log(
+                    "Home page -> onCompleted MutateCREATEREPORT",
+                    AddReportResponse
+                );
+
+                navigation.navigate("Reports", {
+                    screen: "ReportDetail",
+                    params: {
+                        reportId: AddReportResponse.createReport._id,
+                        clinicName: labQuery,
+                    },
+                });
+            },
+        }
+    );
+    // press -> createReport
+    const createReport = (ownerId, appointment) => {
+        MutateReport({
+            variables: {
+                payload: {
+                    ownerId,
+                    appointment,
+                },
+            },
+        });
+    };
+
     //set
     const [chooseLab, setChooseLab] = useState({});
-    console.log(chooseLab, `ini dia`);
     //states for obtaining current location and region of users.
     const [currentLocation, setCurrentLocation] = useState(null);
     const [initialRegion, setInitialRegion] = useState(null);
@@ -206,29 +252,13 @@ export default function Geolocation({ navigation }) {
                     marginVertical: 6,
                 }}
             >
-                {/* <TextInput
-                    style={{
-                        width: 300,
-                        height: 40,
-                        backgroundColor: "white",
-                        borderRadius: 7,
-                        paddingLeft: 10,
-                    }}
-                    placeholder="address search"
-                    value={address}
-                    onChangeText={setAddress}
-                /> */}
-
                 <View style={{ width: 350, zIndex: 1, flexDirection: "row" }}>
                     <GooglePlacesAutocomplete
                         ref={ref}
                         placeholder="Search"
                         onPress={(data = null) => {
                             // 'details' is provided when fetchDetails = true
-                            console.log(
-                                data.description,
-                                `ini hasil search <<<<<<<<<<<<<<<<<`
-                            );
+                            console.log(data.description, `ini hasil search`);
                             setChooseLab(data);
                         }}
                         query={{
@@ -238,33 +268,7 @@ export default function Geolocation({ navigation }) {
                         onFail={(error) => console.log(error)}
                     />
                 </View>
-                {/* 
-                <View style={{ zIndex: 2 }}>
-                    <Pressable
-                        onPress={reverseCoordinate}
-                        style={{
-                            height: 30,
-                            width: 100,
-                            backgroundColor: "white",
-                            borderRadius: 7,
-                            marginTop: 50,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Text>Reverse</Text>
-                    </Pressable>
-                </View> */}
             </View>
-            {/* <View>
-                <Text
-                    style={{
-                        height: 80,
-                    }}
-                >
-                    {`${streetName},${myCity},${myDistrict},${myCountry}`}
-                </Text>
-            </View> */}
             <View style={styles.container}>
                 <MapView style={styles.map} initialRegion={initialRegion}>
                     {dataHospital.map((coordinate, index) => {
@@ -299,7 +303,6 @@ export default function Geolocation({ navigation }) {
                                 latitude: e.nativeEvent.coordinate.latitude,
                                 longitude: e.nativeEvent.coordinate.longitude,
                             });
-                            // console.log(e.nativeEvent.coordinate);
                         }}
                     >
                         <Callout>
@@ -395,6 +398,7 @@ export default function Geolocation({ navigation }) {
                                         textAlign: "left",
                                         fontWeight: 400,
                                     }}
+                                    //when click, create report
                                     onPress={() => {
                                         console.log("create report ");
                                         navigation.navigate("ReportDetail", {
@@ -410,6 +414,20 @@ export default function Geolocation({ navigation }) {
                                         }}
                                     >
                                         Check Services
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    onPress={() => {
+                                        setLabQuery(chooseLab.name);
+                                        createReport(
+                                            loggedInData?.loggedIn._id,
+                                            "OnVisit"
+                                        );
+                                    }}
+                                    style={styles.button}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Book Test On Visit
                                     </Text>
                                 </Pressable>
                             </>
