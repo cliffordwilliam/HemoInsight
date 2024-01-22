@@ -6,28 +6,89 @@ import { Marker, Callout, Circle } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 import * as Location from "expo-location";
-const coordinateData = [
-    { latitude: -6.0932714569637625, longitude: 106.74135711224531 },
-    { latitude: -6.09068945376936, longitude: 106.74314237060142 },
-    { latitude: -6.090901310942518, longitude: 106.74182341172354 },
-    { latitude: -6.093476893986374, longitude: 106.74850838310685 },
+
+const dataHospital = [
+    {
+        name: "Eka Hospital",
+        latitude: "-6.093476893986374",
+        longitude: "106.74850838310685",
+        address:
+            "Central Business District, Jl. Boulevard BSD Tim. Lot IX, Lengkong Gudang, Kec. Serpong, Kota Tangerang Selatan, Banten 15321 da",
+    },
+    {
+        name: "RS THT Proklamasi BSD",
+        latitude: "-6.2927750318928934",
+        longitude: "106.66731684185888",
+        address:
+            "Jl. Proklamasi No.43, RT.11/RW.2, Pegangsaan, Kec. Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10320",
+    },
+    {
+        name: "RS Permata Dalima Serpong",
+        latitude: "-6.300394446048414",
+        longitude: "106.68043363261523",
+        address:
+            "Jalan Rawa Buntu Utara Sektor I.2, Blok UA No.26-27, Rw. Buntu, Kec. Serpong, Kota Tangerang Selatan, Banten 15311",
+    },
+    {
+        name: "Klinik Pratama & Rumah Bersalin Wijaya Kusuma",
+        latitude: "-6.321993354372893",
+        longitude: "106.6624810685519",
+        address:
+            "Jl. Cipeucang, Jl. Kavling Serpong No.30, Serpong, Kec. Serpong, Kota Tangerang Selatan, Banten 15312",
+    },
+    {
+        name: "RSU Hermina Serpong",
+        latitude: "-6.345212994007977",
+        longitude: "106.68614857052862",
+        address:
+            "Jl. Raya Puspitek No.km 1 No 99, Buaran, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
+    },
+    {
+        name: "RS Medika BSD",
+        latitude: "-6.281740762960834",
+        longitude: "106.66736206705019",
+        address:
+            "BSD Serpong, Jl. Letnan Sutopo No.7 Kavling Komplek 3A, Lengkong Wetan, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
+    },
+    {
+        name: "RIS Hospital",
+        latitude: "-6.2916416367804215",
+        longitude: "106.68406101054897",
+        address:
+            "Jl. Lengkong Gudang Timur Raya No.777, BSD CITY, Kec. Serpong, Kota Tangerang Selatan, Banten 15321",
+    },
+    {
+        name: "RS Ichsan Medical Centre Bintaro",
+        latitude: "-6.28876473259024",
+        longitude: "106.7056409019661",
+        address:
+            "Jl. Jombang Raya No.56, Bintaro, Jombang, Kec. Ciputat, Kota Tangerang Selatan, Banten 15414",
+    },
+    {
+        name: "Rumah Sakit Avisena",
+        latitude: "-6.281801844910726",
+        longitude: "106.70295813844893",
+        address:
+            "Jl. Jombang Raya No.3, Pd. Pucung, Kec. Pd. Aren, Kota Tangerang Selatan, Banten 15227",
+    },
+    {
+        name: "Kelinik Resna",
+        latitude: "-6.318770302331121",
+        longitude: "106.6657238304205",
+        address:
+            "Jl. Pjka, Serpong, Kec. Serpong, Kota Tangerang Selatan, Banten 15310",
+    },
 ];
-
-export default function Geolocation() {
+export default function Geolocation({ navigation }) {
     //set
-
+    const [chooseLab, setChooseLab] = useState({});
+    console.log(chooseLab, `ini dia`);
     //states for obtaining current location and region of users.
     const [currentLocation, setCurrentLocation] = useState(null);
     const [initialRegion, setInitialRegion] = useState(null);
-
     const [radius, setRadius] = useState(500);
-    const [address, setAddress] = useState("");
 
     //these states are for showing current address based on current coordinates
-    const [myCity, setMyCity] = useState(null);
-    const [myDistrict, setMyDistrict] = useState(null);
-    const [streetName, setStreetName] = useState(null);
-    const [myCountry, setMyCountry] = useState(null);
 
     //Permission upon accessing current user's location
     useEffect(() => {
@@ -51,23 +112,10 @@ export default function Geolocation() {
 
         getLocation();
     }, []);
-    // console.log(currentLocation, `<<<<<<<<<<current location`);
-    // console.log(initialRegion, `<<<<<<<<<< initial region`);
 
-    //Reversing coordinates to get Address
-    const reverseCoordinate = async () => {
-        const reverseCoordinateAddress = await Location.reverseGeocodeAsync({
-            longitude: currentLocation.longitude,
-            latitude: currentLocation.latitude,
-        });
-        setMyCity(reverseCoordinateAddress[0].city);
-        setMyCountry(reverseCoordinateAddress[0].country);
-        setMyDistrict(reverseCoordinateAddress[0].district);
-        setStreetName(reverseCoordinateAddress[0].street);
-    };
     const ref = useRef();
     useEffect(() => {
-        ref.current?.setAddressText("Some Text");
+        ref.current?.setAddressText("Search");
     }, []);
 
     return (
@@ -82,7 +130,7 @@ export default function Geolocation() {
                     paddingTop: 10,
                 }}
             >
-                <Text>Radius : </Text>
+                <Text style={{ fontSize: 18, paddingBottom: 3 }}>Radius</Text>
                 <View
                     style={{
                         flexDirection: "row",
@@ -175,13 +223,13 @@ export default function Geolocation() {
                     <GooglePlacesAutocomplete
                         ref={ref}
                         placeholder="Search"
-                        onPress={(data, details = null) => {
+                        onPress={(data = null) => {
                             // 'details' is provided when fetchDetails = true
                             console.log(
-                                data,
-                                details,
+                                data.description,
                                 `ini hasil search <<<<<<<<<<<<<<<<<`
                             );
+                            setChooseLab(data);
                         }}
                         query={{
                             key: "AIzaSyDL8RChoRTWFnqmRdVKvPcue0OZ8cZk4vc",
@@ -219,15 +267,21 @@ export default function Geolocation() {
             </View> */}
             <View style={styles.container}>
                 <MapView style={styles.map} initialRegion={initialRegion}>
-                    {coordinateData.map((coordinate, index) => {
+                    {dataHospital.map((coordinate, index) => {
                         return (
                             <Marker
+                                onPress={() => {
+                                    setChooseLab(coordinate);
+                                }}
                                 pinColor="red"
-                                coordinate={coordinate}
+                                coordinate={{
+                                    latitude: coordinate.latitude,
+                                    longitude: coordinate.longitude,
+                                }}
                                 key={index}
                             >
                                 <Callout>
-                                    <Text>Clinic {index + 1}</Text>
+                                    <Text>Clinic {coordinate.name}</Text>
                                 </Callout>
                             </Marker>
                         );
@@ -254,6 +308,116 @@ export default function Geolocation() {
                     </Marker>
                     <Circle center={currentLocation} radius={radius} />
                 </MapView>
+                <View style={styles.choosenCard}>
+                    <View
+                        style={{
+                            flexDirection: "column",
+                            justifyContent: "flex-start",
+                            marginHorizontal: 8,
+                        }}
+                    >
+                        {chooseLab.description ? (
+                            <>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    Clinic :{" "}
+                                    {chooseLab?.description?.split(",")[0]}
+                                </Text>
+
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 400,
+                                    }}
+                                >
+                                    Address:
+                                    {chooseLab?.description?.split(",")[1]}
+                                    {chooseLab?.description?.split(",")[2]}
+                                    {chooseLab?.description?.split(",")[3]}
+                                    {chooseLab?.description?.split(",")[4]}
+                                    {chooseLab?.description?.split(",")[5]}
+                                    {chooseLab?.description?.split(",")[6]}
+                                </Text>
+
+                                <Pressable
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 400,
+                                    }}
+                                    onPress={() => {
+                                        console.log("create report ");
+                                        navigation.navigate("ReportDetail", {
+                                            clinicName: chooseLab.name,
+                                        });
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            color: "red",
+                                            marginTop: 8,
+                                        }}
+                                    >
+                                        Check Services
+                                    </Text>
+                                </Pressable>
+                            </>
+                        ) : chooseLab.name ? (
+                            <>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    Clinic : {chooseLab.name}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 400,
+                                    }}
+                                >
+                                    Address:{chooseLab.address}
+                                </Text>
+                                <Pressable
+                                    style={{
+                                        fontSize: 18,
+                                        textAlign: "left",
+                                        fontWeight: 400,
+                                    }}
+                                    onPress={() => {
+                                        console.log("create report ");
+                                        navigation.navigate("ReportDetail", {
+                                            clinicName: chooseLab.name,
+                                        });
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: 15,
+                                            color: "red",
+                                            marginTop: 8,
+                                        }}
+                                    >
+                                        Check Services
+                                    </Text>
+                                </Pressable>
+                            </>
+                        ) : (
+                            <Text>Select a Clinic</Text>
+                        )}
+                    </View>
+                </View>
             </View>
         </>
     );
@@ -262,12 +426,27 @@ export default function Geolocation() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
+        height: "70%",
+        flexDirection: "column",
+        justifyContent: "flex-start",
     },
     map: {
         width: "100%",
-        height: "100%",
+        height: "70%",
+    },
+    choosenCard: {
+        width: 400,
+        height: 160,
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+        marginTop: 12,
+        borderWidth: 1,
+        borderColor: "lightgray",
     },
 });

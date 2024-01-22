@@ -11,5 +11,6 @@ type Query {
     services: [Service]
     service(id: ID): Service
     serviceTitleDescription(title: String): [Service]
+    serviceByHospital(title:String):[Service]
 }
 `;

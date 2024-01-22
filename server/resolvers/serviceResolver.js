@@ -24,6 +24,13 @@ const serviceQueries = {
             throw error;
         }
     },
+    serviceByHospital: async (_, { title }) => {
+        try {
+            return await Service.findServiceByHospital(title);
+        } catch (error) {
+            throw error;
+        }
+    },
 };
 
 const serviceResolvers = {
