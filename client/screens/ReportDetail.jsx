@@ -20,7 +20,7 @@ import {
   UPDATE_STATUS_REPORT,
 } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
-
+// if premium create report, cron 1min, add credit col to user, 1 time, remind got 1 more credit
 export default function ReportDetail({ route, navigation }) {
   // stripe
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -382,32 +382,37 @@ export default function ReportDetail({ route, navigation }) {
             </View>
             {/* added services title */}
             <Text style={styles.titleTopPush}>Your Services :</Text>
-            {/* added services card con */}
             <View style={styles.cardBorder}>
               {/* added services card */}
               {ReportById?.report.services &&
-                ReportById.report.services.length > 0 && (
-                  <>
-                    {ReportById.report.services.map((service, index) => (
-                      <View style={styles.addedServiceCard} key={service._id}>
-                        {/* title */}
-                        <Text style={styles.addedServiceCardTitle}>
-                          {index + 1}
-                          {"."} {service.title}
-                        </Text>
-                        {/* clinic */}
-                        <Text>Clinic: {service.clinic}</Text>
-                        {/* price */}
-                        <Text>
-                          Price: Rp
-                          {service.price}
-                          ,000
-                        </Text>
-                      </View>
-                    ))}
-                  </>
-                )}
+              ReportById.report.services.length > 0 ? (
+                ReportById.report.services.map((service, index) => (
+                  <View style={styles.addedServiceCard} key={service._id}>
+                    {/* title */}
+                    <Text style={styles.addedServiceCardTitle}>
+                      {index + 1}
+                      {"."} {service.title}
+                    </Text>
+                    {/* clinic */}
+                    <Text>Clinic: {service.clinic}</Text>
+                    {/* price */}
+                    <Text>
+                      Price: Rp
+                      {service.price}
+                      ,000
+                    </Text>
+                  </View>
+                ))
+              ) : (
+                // Render a placeholder service if no services are present
+                <View style={styles.addedServiceCard}>
+                  <Text style={styles.addedServiceCardTitle}>
+                    Select your service below
+                  </Text>
+                </View>
+              )}
             </View>
+
             {/* sub total */}
             <Text style={styles.subTotal}>
               Sub Total Rp: {subTotal.toFixed(3)}

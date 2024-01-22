@@ -8,10 +8,19 @@ import {
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../context/LoginContext";
-import { CREATEREPORT, LOGGEDINUSER } from "../config/queries";
+import {
+  CREATEREPORT,
+  CREATE_INTENT,
+  LOGGEDINUSER,
+  PAY_MAIL,
+  UPGRADE,
+} from "../config/queries";
 import { useLazyQuery, useMutation } from "@apollo/client";
+import { useStripe } from "@stripe/stripe-react-native";
 
 export default function Homepage({ navigation }) {
+  // stripe
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   // store
   const { removeTokenLogin } = useContext(LoginContext);
   // LAZY get loggedin
@@ -27,6 +36,59 @@ export default function Homepage({ navigation }) {
   useEffect(() => {
     funcLoggedIn();
   }, []);
+  // press -> stripe
+  const stripe = () => {
+    MutateIntent({
+      variables: {
+        payload: {
+          amount: 300,
+        },
+      },
+    });
+  };
+  // stripe mutation
+  const [
+    MutateIntent,
+    { data: StripeData, loading: StripeLoading, error: StripeError },
+  ] = useMutation(CREATE_INTENT, {
+    onCompleted: async () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationCREATE_INTENT",
+        StripeData
+      );
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: "test.dev",
+        paymentIntentClientSecret: StripeData.createIntent.paymentIntent,
+      });
+      if (initResponse.error) {
+        console.log(initResponse.error);
+        return;
+      }
+      await presentPaymentSheet(); // wait here until user click pay or cancel
+      // send mail
+      MutatePayMail({
+        variables: {
+          payload: {
+            amountPaid: 300,
+          },
+        },
+      });
+    },
+    onError: async (res) => {
+      console.log("Pay Screen -> MutateIntent onError", res);
+    },
+  });
+  const [MutatePayMail, { data: PayMailRes }] = useMutation(PAY_MAIL, {
+    onCompleted: () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationPAY_MAIL",
+        PayMailRes
+      );
+      // TODO: update status USER HERE
+      MutateUpgrade();
+    },
+    refetchQueries: [LOGGEDINUSER],
+  });
   // press -> Logout
   const handleLogout = async () => {
     console.log(
@@ -51,6 +113,15 @@ export default function Homepage({ navigation }) {
       },
     }
   );
+  const [MutateUpgrade, { data: UpgradeData }] = useMutation(UPGRADE, {
+    onCompleted: () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationUPGRADE",
+        UpgradeData
+      );
+    },
+    refetchQueries: [LOGGEDINUSER],
+  });
   // press -> createReport
   const createReport = (ownerId, appointment) => {
     MutateReport({
@@ -199,6 +270,14 @@ export default function Homepage({ navigation }) {
             <Text style={styles.buttonText}>Logout</Text>
           </Pressable>
         </View>
+        {/* loggedInData?.loggedIn.status */}
+        {/* sebscription */}
+        {/* create nme a button that has a callback func here if the loggedInData?.loggedIn.status is "Regular" */}
+        {loggedInData?.loggedIn.status === "Regular" && (
+          <Pressable style={styles.button} onPress={stripe}>
+            <Text style={styles.buttonText}>Pay Subscription</Text>
+          </Pressable>
+        )}
       </View>
     </ScrollView>
   );

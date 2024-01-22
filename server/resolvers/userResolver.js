@@ -39,6 +39,16 @@ const userMutations = {
       throw error;
     }
   },
+
+  upgrade: async (_, { payload }, context) => {
+    // guard
+    const loggedUser = await context.tokenGuard();
+    try {
+      return await User.upgrade({ id: loggedUser.id });
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 const userResolvers = {

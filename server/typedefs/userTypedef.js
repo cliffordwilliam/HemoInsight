@@ -21,6 +21,7 @@ module.exports = userTypedef = `#graphql
   type Mutation {
     register(payload: RegisterInput): User
     login(payload: LoginInput): AuthPayload
+    upgrade: String
   }
 
   input RegisterInput {

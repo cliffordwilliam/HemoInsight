@@ -432,3 +432,8 @@ export const UPDATE_STATUS_REPORT = gql`
     updateStatusReport(reportId: $reportId)
   }
 `;
+export const UPGRADE = gql`
+  mutation Mutation {
+    upgrade
+  }
+`;

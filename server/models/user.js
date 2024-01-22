@@ -16,6 +16,19 @@ module.exports = class User {
     }
   }
 
+  static async upgrade(id) {
+    try {
+      console.log(id, "BE");
+      const res = await this.collection().updateOne(
+        { _id: id.id },
+        { $set: { status: "Premium" } }
+      );
+      return `modifiedCount: ${res.modifiedCount}`;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   static async findLoggedIn(query) {
     try {
       const array = await this.collection()
