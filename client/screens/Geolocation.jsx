@@ -401,7 +401,7 @@ export default function Geolocation({ navigation, route }) {
                                     //when click, create report
                                     onPress={() => {
                                         console.log("create report ");
-                                        navigation.navigate("ReportDetail", {
+                                        navigation.navigate("CheckServices", {
                                             clinicName: chooseLab.name,
                                         });
                                     }}
@@ -416,20 +416,42 @@ export default function Geolocation({ navigation, route }) {
                                         Check Services
                                     </Text>
                                 </Pressable>
-                                <Pressable
-                                    onPress={() => {
-                                        setLabQuery(chooseLab.name);
-                                        createReport(
-                                            loggedInData?.loggedIn._id,
-                                            "OnVisit"
-                                        );
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-around",
+                                        marginVertical: 6,
                                     }}
-                                    style={styles.button}
                                 >
-                                    <Text style={styles.buttonText}>
-                                        Book Test On Visit
-                                    </Text>
-                                </Pressable>
+                                    <Pressable
+                                        onPress={() => {
+                                            setLabQuery(chooseLab.name);
+                                            createReport(
+                                                loggedInData?.loggedIn._id,
+                                                "OnVisit"
+                                            );
+                                        }}
+                                        style={styles.button}
+                                    >
+                                        <Text style={styles.buttonText}>
+                                            Book Test On Visit
+                                        </Text>
+                                    </Pressable>
+                                    <Pressable
+                                        onPress={() => {
+                                            setLabQuery(chooseLab.name);
+                                            createReport(
+                                                loggedInData?.loggedIn._id,
+                                                "OnSite"
+                                            );
+                                        }}
+                                        style={styles.button}
+                                    >
+                                        <Text style={styles.buttonText}>
+                                            Book Test On Site
+                                        </Text>
+                                    </Pressable>
+                                </View>
                             </>
                         ) : (
                             <Text>Select a Clinic</Text>

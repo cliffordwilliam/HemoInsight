@@ -19,14 +19,17 @@ import ReportListOfMember from "../screens/ReportListOfMember";
 import AddFamilyMemberForm from "../screens/AddFamilyMemberForm";
 import Geolocation from "../screens/Geolocation";
 import Result from "../screens/Result";
+import CheckServices from "../screens/CheckServices";
+import ChartPage from "../screens/ResultPage";
 import { Pressable } from "react-native";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const StackReport = () => {
     return (
-        <Stack.Navigator initialRouteName="ChooseLab">
+        <Stack.Navigator initialRouteName="FamilyMember">
             <Stack.Screen name="FamilyMember" component={FamilyMemberList} />
+            <Stack.Screen name="CheckServices" component={CheckServices} />
             <Stack.Screen
                 name="ReportListOfMember"
                 component={ReportListOfMember}
@@ -35,6 +38,8 @@ const StackReport = () => {
             <Stack.Screen name="AddFam" component={AddFamilyMemberForm} />
             <Stack.Screen name="ChooseLab" component={Geolocation} />
             <Stack.Screen name="ReportList" component={ReportList} />
+            <Stack.Screen name="ChartPage" component={ChartPage} />
+
             <Stack.Screen
                 name="ReportDetail"
                 component={ReportDetail}
