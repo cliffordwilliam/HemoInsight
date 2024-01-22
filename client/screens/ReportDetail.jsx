@@ -2,7 +2,6 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
-  SafeAreaView,
   Text,
   StyleSheet,
   View,
@@ -18,6 +17,7 @@ import {
   SERVICETITLEDESC,
   PAY_MAIL,
   CREATE_INTENT,
+  UPDATE_STATUS_REPORT,
 } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
 
@@ -115,12 +115,30 @@ export default function ReportDetail({ route, navigation }) {
       refetchQueries: [GET_REPORT_BY_ID],
     }
   );
+  const [MutateStatusReport, { data: StatusReportRes }] = useMutation(
+    UPDATE_STATUS_REPORT,
+    {
+      onCompleted: () => {
+        console.log(
+          "ReportDetail page -> onCompleted MutationUPDATE_STATUS_REPORT",
+          StatusReportRes
+        );
+      },
+      refetchQueries: [GET_REPORT_BY_ID],
+    }
+  );
   const [MutatePayMail, { data: PayMailRes }] = useMutation(PAY_MAIL, {
     onCompleted: () => {
       console.log(
         "ReportDetail page -> onCompleted MutationPAY_MAIL",
         PayMailRes
       );
+      // update status report to paid
+      MutateStatusReport({
+        variables: {
+          reportId: reportId,
+        },
+      });
     },
     refetchQueries: [GET_REPORT_BY_ID],
   });
@@ -155,7 +173,6 @@ export default function ReportDetail({ route, navigation }) {
       console.log("Pay Screen -> MutateIntent onError", res);
     },
   });
-
   // get the appropriate appointment color
   const getAppointmentColor = (appointment) => {
     if (appointment === "OnSite") {

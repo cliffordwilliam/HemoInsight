@@ -22,7 +22,8 @@ type Query{
 
 type Mutation {
     createReport(payload: ReportInput): Report
-    deleteReport(reportId:ID):Report
+    deleteReport(reportId: ID): Report
+    updateStatusReport(reportId: ID): String
 }
 
 input ReportInput {

@@ -1,14 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  SafeAreaView,
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { Text, View, StyleSheet, Pressable, ScrollView } from "react-native";
 import { DELETE_REPORT, GET_REPORT_BY_OWNERID } from "../config/queries";
 
 export default function ReportListOfMember({ navigation, route }) {
@@ -160,15 +153,15 @@ export default function ReportListOfMember({ navigation, route }) {
               ) : (
                 // unpaid = checkout + delete button
                 <>
-                  {/* checkout */}
-                  <Pressable
+                  {/* checkout HOW?? */}
+                  {/* <Pressable
                     onPress={() => {
                       console.log("checkout");
                     }}
                     style={styles.button}
                   >
                     <Text style={styles.buttonText}>Checkout</Text>
-                  </Pressable>
+                  </Pressable> */}
                   {/* delete */}
                   <Pressable
                     onPress={() => {

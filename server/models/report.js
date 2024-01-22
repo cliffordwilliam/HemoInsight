@@ -262,4 +262,16 @@ module.exports = class Report {
       console.log(error);
     }
   }
+
+  static async updateStatusReportById(reportId) {
+    try {
+      const res = await this.collection().updateOne(
+        { _id: new ObjectId(reportId) },
+        { $set: { status: "paid" } }
+      );
+      return `modifiedCount: ${res.modifiedCount}`;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };

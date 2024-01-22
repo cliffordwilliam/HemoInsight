@@ -427,3 +427,8 @@ export const CREATE_INTENT = gql`
     }
   }
 `;
+export const UPDATE_STATUS_REPORT = gql`
+  mutation UpdateStatusReport($reportId: ID) {
+    updateStatusReport(reportId: $reportId)
+  }
+`;
