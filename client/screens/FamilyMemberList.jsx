@@ -71,10 +71,12 @@ export default function FamilyMemberList({ navigation, route }) {
         <View style={styles.card}>
           {/* button con */}
           <View style={styles.buttonCon}>
-            {/* kick ChooseLab */}
+            {/* kick ChooseLab + user ID */}
             <Pressable
               onPress={() => {
-                navigation.navigate("ChooseLab");
+                navigation.navigate("ChooseLab", {
+                  ownerId: loggedInData?.loggedIn?._id,
+                });
               }}
               style={styles.button}
             >
@@ -113,15 +115,18 @@ export default function FamilyMemberList({ navigation, route }) {
             <View style={styles.card} key={member._id}>
               {/* button con */}
               <View style={styles.buttonCon}>
+                {/* kick ChooseLab + fam ID */}
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("ChooseLab");
+                    navigation.navigate("ChooseLab", {
+                      ownerId: member._id,
+                    });
                   }}
                   style={styles.button}
                 >
                   <Text style={styles.buttonText}>Book Test</Text>
                 </Pressable>
-                {/* kick list of reports */}
+                {/* kick list of reports + fam ID */}
                 <Pressable
                   onPress={() => {
                     navigation.navigate("ReportListOfMember", {

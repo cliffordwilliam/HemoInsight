@@ -82,6 +82,8 @@ const dataHospital = [
 ];
 
 export default function Geolocation({ navigation, route }) {
+  // params
+  const { ownerId } = route.params;
   // state
   const [labQuery, setLabQuery] = useState("");
   const [chooseLab, setChooseLab] = useState({});
@@ -92,19 +94,6 @@ export default function Geolocation({ navigation, route }) {
     longitudeDelta: 0.02,
   }); // DO NOT USE NULL - sometimes it is late then it crash
   const [initialRegion, setInitialRegion] = useState(null); // OK
-  // LAZY get loggedin
-  const [
-    funcLoggedIn,
-    { data: loggedInData, loading: loggedInLoading, client: loggedInClient },
-  ] = useLazyQuery(LOGGEDINUSER, {
-    onCompleted: () => {
-      console.log("Home page -> onCompleted QueryLOGGEDINUSER", loggedInData);
-    },
-    refetchQueries: [LOGGEDINUSER],
-  });
-  useEffect(() => {
-    funcLoggedIn();
-  }, []);
   // create report
   const [MutateReport, { data: AddReportResponse }] = useMutation(
     CREATEREPORT,
@@ -126,7 +115,7 @@ export default function Geolocation({ navigation, route }) {
     }
   );
   // press -> createReport
-  const createReport = (ownerId, appointment, clinicName) => {
+  const createReport = (appointment, clinicName) => {
     MutateReport({
       variables: {
         payload: {
@@ -223,11 +212,7 @@ export default function Geolocation({ navigation, route }) {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  createReport(
-                    loggedInData?.loggedIn._id,
-                    "OnSite",
-                    chooseLab.name
-                  );
+                  createReport("OnSite", chooseLab.name);
                 }}
               >
                 <Text style={styles.buttonText}>Onsite</Text>
@@ -236,11 +221,7 @@ export default function Geolocation({ navigation, route }) {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  createReport(
-                    loggedInData?.loggedIn._id,
-                    "OnVisit",
-                    chooseLab.name
-                  );
+                  createReport("OnVisit", chooseLab.name);
                 }}
               >
                 <Text style={styles.buttonText}>OnVisit</Text>

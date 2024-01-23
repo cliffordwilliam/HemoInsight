@@ -218,27 +218,6 @@ export default function Homepage({ navigation }) {
                   </View>
                 </View>
               </View>
-              {/* createReport buttons con */}
-              <View style={styles.profileCardTopSectionButtonCon}>
-                {/* onSite */}
-                <Pressable
-                  style={styles.button}
-                  onPress={() => {
-                    createReport(loggedInData?.loggedIn._id, "OnSite");
-                  }}
-                >
-                  <Text style={styles.buttonText}>Onsite</Text>
-                </Pressable>
-                {/* onVisit */}
-                <Pressable
-                  style={styles.button}
-                  onPress={() => {
-                    createReport(loggedInData?.loggedIn._id, "OnVisit");
-                  }}
-                >
-                  <Text style={styles.buttonText}>OnVisit</Text>
-                </Pressable>
-              </View>
             </>
           )}
         </View>
