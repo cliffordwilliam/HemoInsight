@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
-  Button,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
