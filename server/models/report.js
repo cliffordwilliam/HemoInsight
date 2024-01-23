@@ -143,6 +143,7 @@ module.exports = class Report {
         userOwner: [],
         childOwner: [],
         appointment: payload.appointment,
+        clinicName: payload.clinicName,
       };
       const result = await this.collection().insertOne(formatPayload);
       const array = await this.collection()

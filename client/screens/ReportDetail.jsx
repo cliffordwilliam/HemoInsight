@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Text,
@@ -26,41 +26,51 @@ import { useStripe } from "@stripe/stripe-react-native";
 export default function ReportDetail({ route, navigation }) {
   // params
   const { reportId } = route.params;
-  const { clinicName } = route.params;
-  // stripe
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  //get services based on hospital
-  const { data: ServicesByHospital } = useQuery(GETS_SERVICES_BY_HOSPITAL, {
-    variables: { title: clinicName },
-    onComplete: () => {
-      console.log("Query completed successfully");
-    },
-    onError: (error) => {
-      console.error("Query error:", error);
-    },
-  });
-
+  // let { clinicName } = route.params;
   // state
   const [payAmount, setPayAmount] = useState(0);
   const [servicesData, setServicesData] = useState([]);
   const [title, setTitle] = useState("");
+  const [clinicName, setClinicName] = useState("");
   let subTotal = 0; // count total price
+  // stripe
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   // ONREADY get report by id
   const { data: ReportById, loading: ReportByIdLoading } = useQuery(
     GET_REPORT_BY_ID,
     {
       variables: { reportId },
-    },
-    {
-      onCompleted: () => {
+      onCompleted: (reportData) => {
         console.log(
-          `ReportDetail page -> onCompleted QueryGET_REPORT_BY_ID`,
-          ReportById
+          `ReportDetail page -> onCompleted Query GET_REPORT_BY_ID`,
+          reportData
         );
+        // Extract clinicName from the response
+        const clinicName = reportData?.report?.clinicName;
+        setClinicName(clinicName);
+        // Use clinicName to fetch services based on hospital
+        getServicesByHospital({ variables: { title: clinicName } });
       },
+      fetchPolicy: "network-only",
     }
   );
-  // get Services data search (on press button)
+  // ONREADY get services based on hospital (Lazy Query)
+  const [
+    getServicesByHospital,
+    { data: ServicesByHospital, loading: ServicesByHospitalLoading },
+  ] = useLazyQuery(GETS_SERVICES_BY_HOSPITAL, {
+    onCompleted: () => {
+      console.log(
+        "Query GETS_SERVICES_BY_HOSPITAL completed successfully",
+        ServicesByHospital
+      );
+      setServicesData(ServicesByHospital.serviceByHospital);
+    },
+    onError: (error) => {
+      console.error("Query GETS_SERVICES_BY_HOSPITAL error:", error);
+    },
+  });
+  // LAZY search get Services data search (on press button)
   const [getServices, { data: SearchData }] = useLazyQuery(SERVICETITLEDESC, {
     onCompleted: () => {
       const filteredData = SearchData.serviceTitleDescription.filter(
@@ -70,7 +80,7 @@ export default function ReportDetail({ route, navigation }) {
       setServicesData(filteredData);
     },
   });
-  // press -> QUERY_SERVICE_TITLE_DESC
+  // press -> QUERY_SERVICE_TITLE_DESC (search)
   const searchServices = () => {
     // no serach? grab CACHE
     if (title === "") {
@@ -108,19 +118,17 @@ export default function ReportDetail({ route, navigation }) {
   const handleBackPress = () => {
     navigation.goBack();
   };
-  // db talk
-  const [MutateCron, { data: Cronres }] = useMutation(
-    ADD_SERVICES,
-    {
-      onCompleted: () => {
-        console.log(
-          "ReportDetail page -> onCompleted MutationADD_SERVICES",
-          AddServiceResponse
-        );
-      },
-      refetchQueries: [GET_REPORT_BY_ID],
-    }
-  );
+  // CRON MUTATE
+  const [MutateCron, { data: Cronres }] = useMutation(ADD_SERVICES, {
+    onCompleted: () => {
+      console.log(
+        "ReportDetail page -> onCompleted MutationADD_SERVICES",
+        AddServiceResponse
+      );
+    },
+    refetchQueries: [GET_REPORT_BY_ID],
+  });
+  // ADD SERVICE MUTATE
   const [MutateService, { data: AddServiceResponse }] = useMutation(
     ADD_SERVICES,
     {
@@ -133,6 +141,7 @@ export default function ReportDetail({ route, navigation }) {
       refetchQueries: [GET_REPORT_BY_ID],
     }
   );
+  // UPDATE REPORT STATUS MUTATE (PAID)
   const [MutateStatusReport, { data: StatusReportRes }] = useMutation(
     UPDATE_STATUS_REPORT,
     {
@@ -145,6 +154,7 @@ export default function ReportDetail({ route, navigation }) {
       refetchQueries: [GET_REPORT_BY_ID],
     }
   );
+  // SEND MAIL MUTATE ON PAY
   const [MutatePayMail, { data: PayMailRes }] = useMutation(PAY_MAIL, {
     onCompleted: () => {
       console.log(
@@ -160,6 +170,7 @@ export default function ReportDetail({ route, navigation }) {
     },
     refetchQueries: [GET_REPORT_BY_ID],
   });
+  // MUTATE STRIPE
   const [
     MutateIntent,
     { data: StripeData, loading: StripeLoading, error: StripeError },
@@ -191,6 +202,7 @@ export default function ReportDetail({ route, navigation }) {
       console.log("Pay Screen -> MutateIntent onError", res);
     },
   });
+  // RENDERING DYNAMICS
   // get the appropriate appointment color
   const getAppointmentColor = (appointment) => {
     if (appointment === "OnSite") {
@@ -225,17 +237,13 @@ export default function ReportDetail({ route, navigation }) {
     return date.toLocaleDateString();
   };
   // loading?
-  if (ReportByIdLoading) {
+  if (ReportByIdLoading || ServicesByHospitalLoading) {
     return <Text>Loading</Text>;
   }
   // update total price
   ReportById?.report?.services?.map((service) => {
     subTotal += service.price;
   });
-  // useQuery is CACHED, so if got cached then just set
-  if (servicesData.length === 0) {
-    setServicesData(ServicesByHospital.serviceByHospital);
-  }
   // render
   return (
     <ScrollView style={styles.background}>

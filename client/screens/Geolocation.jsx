@@ -126,12 +126,13 @@ export default function Geolocation({ navigation, route }) {
     }
   );
   // press -> createReport
-  const createReport = (ownerId, appointment) => {
+  const createReport = (ownerId, appointment, clinicName) => {
     MutateReport({
       variables: {
         payload: {
           ownerId,
           appointment,
+          clinicName,
         },
       },
     });
@@ -222,8 +223,11 @@ export default function Geolocation({ navigation, route }) {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  setLabQuery(chooseLab.name);
-                  createReport(loggedInData?.loggedIn._id, "OnSite");
+                  createReport(
+                    loggedInData?.loggedIn._id,
+                    "OnSite",
+                    chooseLab.name
+                  );
                 }}
               >
                 <Text style={styles.buttonText}>Onsite</Text>
@@ -232,8 +236,11 @@ export default function Geolocation({ navigation, route }) {
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  setLabQuery(chooseLab.name);
-                  createReport(loggedInData?.loggedIn._id, "OnVisit");
+                  createReport(
+                    loggedInData?.loggedIn._id,
+                    "OnVisit",
+                    chooseLab.name
+                  );
                 }}
               >
                 <Text style={styles.buttonText}>OnVisit</Text>

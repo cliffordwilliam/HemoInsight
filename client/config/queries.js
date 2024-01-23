@@ -296,6 +296,7 @@ export const GET_REPORT_BY_ID = gql`
         userId
       }
       appointment
+      clinicName
     }
   }
 `;

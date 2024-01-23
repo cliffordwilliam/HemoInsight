@@ -10,7 +10,7 @@ type Report {
     userOwner: User
     childOwner: Child
     appointment: String
-    clinicName:String
+    clinicName: String
 }
 
 
@@ -30,7 +30,6 @@ type Mutation {
 input ReportInput {
     ownerId: ID
     appointment: String   
-    clinicName:String
-
+    clinicName: String
 }
 `;
