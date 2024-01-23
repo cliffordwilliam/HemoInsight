@@ -19,6 +19,7 @@ import {
   CREATE_INTENT,
   UPDATE_STATUS_REPORT,
   GETS_SERVICES_BY_HOSPITAL,
+  SCHEDULE,
 } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
 
@@ -119,7 +120,7 @@ export default function ReportDetail({ route, navigation }) {
     navigation.goBack();
   };
   // CRON MUTATE
-  const [MutateCron, { data: Cronres }] = useMutation(ADD_SERVICES, {
+  const [MutateCron, { data: Cronres }] = useMutation(SCHEDULE, {
     onCompleted: () => {
       console.log(
         "ReportDetail page -> onCompleted MutationADD_SERVICES",
@@ -150,6 +151,21 @@ export default function ReportDetail({ route, navigation }) {
           "ReportDetail page -> onCompleted MutationUPDATE_STATUS_REPORT",
           StatusReportRes
         );
+        // update status report to paid
+        let target = ReportById?.report?.userOwner?.email;
+        if (target === undefined) {
+          target = ReportById?.report.childOwner.birthdate;
+        }
+        if (ReportById?.report?.userOwner?.status !== "Regular") {
+          MutateCron({
+            variables: {
+              payload: {
+                targetAddress: target,
+                scheduleInput: "* * * * *",
+              },
+            },
+          });
+        }
       },
       refetchQueries: [GET_REPORT_BY_ID],
     }
@@ -190,6 +206,7 @@ export default function ReportDetail({ route, navigation }) {
       }
       await presentPaymentSheet(); // wait here until user click pay or cancel
       // send mail
+      console.log();
       MutatePayMail({
         variables: {
           payload: {
@@ -463,7 +480,11 @@ export default function ReportDetail({ route, navigation }) {
             <Pressable
               style={styles.button}
               onPress={() => {
-                setPayAmount(subTotal);
+                let pay = subTotal;
+                if (ReportById?.report?.userOwner?.status !== "Regular") {
+                  pay *= 0.9;
+                }
+                setPayAmount(pay);
                 stripe(subTotal);
               }}
             >
