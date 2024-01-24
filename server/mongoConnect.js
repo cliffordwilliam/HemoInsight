@@ -6,21 +6,21 @@ const dbName = process.env.MONGODB_NAME;
 const client = new MongoClient(uri);
 
 async function connect() {
-  try {
-    await client.connect();
-    console.log("Successfully connect");
-    return client;
-  } catch (error) {
-    await client.close();
-    throw error;
-  }
+    try {
+        await client.connect();
+        console.log("Successfully connect");
+        return client;
+    } catch (error) {
+        await client.close();
+        throw error;
+    }
 }
 // getter
 function getDatabase() {
-  return client.db(dbName);
+    return client.db(dbName);
 }
 
 module.exports = {
-  connect,
-  getDatabase,
+    connect,
+    getDatabase,
 };

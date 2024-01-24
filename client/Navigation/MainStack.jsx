@@ -11,7 +11,6 @@ import Login from "../screens/Login";
 import Register from "../screens/Register";
 import MyHealthRecord from "../screens/MyHealthRecord";
 import CreateReport from "../screens/CreateReport";
-import HealthNew from "../screens/HealthNews";
 import ReportList from "../screens/ReportList";
 import ReportDetail from "../screens/ReportDetail";
 import FamilyMemberList from "../screens/FamilyMemberList";
@@ -23,6 +22,7 @@ import CheckServices from "../screens/CheckServices";
 import ChartPage from "../screens/ResultPage";
 import Summary from "../screens/Summary";
 import { Pressable } from "react-native";
+import LandingPage from "../screens/LandingPage";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -58,8 +58,8 @@ const StackReport = () => {
 const StackUser = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Records" component={MyHealthRecord} />
-      <Stack.Screen name="Summary" component={Summary} />
+      <Stack.Screen name="ListUser" component={MyHealthRecord} />
+      {/* <Stack.Screen name="DetailUser" component={Homepage} /> */}
     </Stack.Navigator>
   );
 };
@@ -76,7 +76,7 @@ export default function MainStack() {
               let iconName;
               if (route.name === "Home") {
                 iconName = focused ? "home" : "home-outline";
-              } else if (route.name === "Bookings") {
+              } else if (route.name === "Health Services") {
                 iconName = focused ? "list" : "list-outline";
               } else if (route.name === "My Health Profile") {
                 iconName = focused ? "people" : "people-outline";
@@ -103,7 +103,7 @@ export default function MainStack() {
             options={{
               headerShown: false,
             }}
-            name="Bookings"
+            name="Health Services"
             component={StackReport}
           />
 
@@ -118,7 +118,7 @@ export default function MainStack() {
         </Tab.Navigator>
       ) : (
         <Tab.Navigator
-          initialRouteName="Login"
+          initialRouteName="Welcome"
           screenOptions={({ route }) => (
             {
               tabBarIcon: ({ focused, color, size }) => {
@@ -144,6 +144,11 @@ export default function MainStack() {
           <Tab.Screen
             name="Login"
             component={Login}
+            options={{ headerShown: false }} // hide
+          />
+          <Tab.Screen
+            name="Welcome"
+            component={LandingPage}
             options={{ headerShown: false }} // hide
           />
         </Tab.Navigator>

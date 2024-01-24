@@ -139,6 +139,7 @@ export default function Homepage({ navigation }) {
   return (
     <ScrollView style={styles.background}>
       {/* header */}
+
       <View style={styles.header}>
         {/* text con */}
         <View style={styles.headerTextCon}>
@@ -153,7 +154,10 @@ export default function Homepage({ navigation }) {
             </>
           )}
           {/* welcome msg */}
-          <Text style={styles.headerTextWelcome}>Welcome to Hemo Insight</Text>
+          <Text style={styles.headerTextWelcome}>
+            Welcome to{"  "}
+            <Text style={styles.headerTextWelcome2}>Hemo Insight</Text>{" "}
+          </Text>
         </View>
         {/* logo */}
         <Image
@@ -163,6 +167,7 @@ export default function Homepage({ navigation }) {
           }}
         />
       </View>
+
       {/* page root con */}
       <View style={styles.con}>
         {/* logged in profile card */}
@@ -218,30 +223,105 @@ export default function Homepage({ navigation }) {
                   </View>
                 </View>
               </View>
+              {/* createReport buttons con */}
+
+              {loggedInData?.loggedIn.status == "Premium" ? (
+                <View style={styles.profileCardTopSectionButtonCon}>
+                  {/* onSite */}
+                  <View style={styles.premiumTag}>
+                    <Text style={styles.buttonTextPremium}>Premium</Text>
+                  </View>
+                </View>
+              ) : (
+                <View style={styles.profileCardTopSectionButtonCon}>
+                  {/* onSite */}
+                  <View style={styles.button}>
+                    <Text style={styles.buttonText}>Regular</Text>
+                  </View>
+                </View>
+              )}
             </>
           )}
         </View>
         {/* banner */}
-        <View style={styles.bannerCard}>
-          {/* logged in user img */}
-          <Image
-            style={styles.bannerCardImage}
-            source={{
-              uri: "https://picsum.photos/id/89/800/300",
-            }}
-          />
-          {/* card body */}
-          <View style={styles.bannerCardBody}>
-            {/* title */}
-            <Text style={styles.bannerCardBodyTitle}>
-              Advanced Health Checkup
-            </Text>
-            {/* content */}
-            <Text style={styles.bannerCardBodyContent}>
-              + 10% Health cashback T&C
-            </Text>
-          </View>
-        </View>
+        {loggedInData?.loggedIn.status !== "Premium" ? (
+          <>
+            <View style={styles.bannerCard}>
+              {/* logged in user img */}
+              <Image
+                style={styles.bannerCardImage}
+                source={{
+                  uri: "https://picsum.photos/id/89/800/300",
+                }}
+              />
+
+              {/* card body */}
+              <View style={styles.bannerCardBody}>
+                {/* title */}
+                <Text style={styles.bannerCardBodyTitle}>
+                  Subscribe Today for Personalized Insights
+                </Text>
+                {/* content */}
+                <Text style={styles.bannerCardBodyContent}>
+                  Supercharge Your Wellness Journey! Subscribe Now for a 10%
+                  Discount on All Services.
+                </Text>
+              </View>
+            </View>
+            <View>
+              <View
+                style={{
+                  width: 410,
+                  borderRadius: 10,
+                  height: 250,
+                  margin: 3,
+                  borderWidth: 2,
+                  borderColor: "#59BB85",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "700",
+                    padding: 12,
+                  }}
+                >
+                  Don't Miss Out – Act Now for a Healthier, Happier You!
+                </Text>
+                <View
+                  style={{
+                    width: 380,
+                    borderRadius: 10,
+                    height: 140,
+                    margin: 3,
+                    borderWidth: 2,
+                    borderColor: "#59BB85",
+                    backgroundColor: "#59BB85",
+                    alignContent: "center",
+                    marginLeft: 10,
+                  }}
+                >
+                  <Pressable onPress={stripe} style={styles.style}>
+                    <View style={{ margin: 12, gap: 10 }}>
+                      <Text style={styles.buttonText}>
+                        $79,00 Annual Subscription Fee
+                      </Text>
+                      <Text style={styles.bannerCardBodyTitle2}>
+                        Enjoy all year 10% discount from all services available.
+                      </Text>
+                      <View>
+                        <Text style={styles.buttonText}>Subscribe Now!</Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </>
+        ) : (
+          <></>
+        )}
+
         <View style={styles.logoutButtonCon}>
           {/* logout */}
           <Pressable style={styles.button} onPress={handleLogout}>
@@ -251,11 +331,11 @@ export default function Homepage({ navigation }) {
         {/* loggedInData?.loggedIn.status */}
         {/* sebscription */}
         {/* create nme a button that has a callback func here if the loggedInData?.loggedIn.status is "Regular" */}
-        {loggedInData?.loggedIn.status === "Regular" && (
-          <Pressable style={styles.button} onPress={stripe}>
-            <Text style={styles.buttonText}>Pay Subscription</Text>
-          </Pressable>
-        )}
+        {/* {loggedInData?.loggedIn.status === "Regular" && (
+                    <Pressable style={styles.button} onPress={stripe}>
+                        <Text style={styles.buttonText}>Pay Subscription</Text>
+                    </Pressable>
+                )} */}
       </View>
     </ScrollView>
   );
@@ -266,6 +346,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#eeeeee",
   },
   header: {
+    backgroundColor: "#59BB85",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 12,
+    paddingTop: 40,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    height: 200,
+    paddingHorizontal: 25,
+  },
+  header2: {
     backgroundColor: "#59BB85",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -290,6 +382,12 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 20,
   },
+  headerTextWelcome2: {
+    color: "darkred",
+    fontWeight: "800",
+    fontSize: 20,
+  },
+
   whiteText: {
     color: "white",
   },
@@ -369,9 +467,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
   },
+  premiumTag: {
+    backgroundColor: "#59BB85",
+    // width: "100%",
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
   buttonText: {
     color: "white",
     fontWeight: "800",
+    textAlign: "center",
+  },
+  buttonTextPremium: {
+    color: "white",
+    fontWeight: "900",
     textAlign: "center",
   },
   logoutButtonCon: {
@@ -382,6 +492,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "white",
+    marginVertical: 20,
   },
   bannerCardImage: {
     width: "100%",
@@ -389,6 +500,7 @@ const styles = StyleSheet.create({
   },
   bannerCardBody: {
     padding: 10,
+    marginVertical: 20,
   },
   bannerCardBodyTitle: {
     fontSize: 16,
@@ -396,6 +508,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   bannerCardBodyContent: {
-    fontSize: 14,
+    fontSize: 19,
+  },
+  bannerCardBodyTitle2: {
+    fontSize: 16,
+    fontWeight: "800",
+    marginBottom: 2,
+    textAlign: "center",
   },
 });
