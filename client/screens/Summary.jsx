@@ -45,109 +45,6 @@ export default function Summary({ navigation, route }) {
       servicesByType[serviceTitle].push(service);
     });
   });
-  // services collected in obj READY
-  // for each key = 1 graph - values are the services
-  let a = {
-    "Blood Glucose Test": [
-      {
-        __typename: "Service",
-        _id: "65a79a9a6d134a6e88660b0f",
-        clinic: "RS THT Proklamasi BSD",
-        description:
-          "A blood glucose test measures the amount of sugar in your blood. It helps monitor how well your body processes glucose, a vital energy source. This simple test is crucial for managing diabetes and maintaining overall health.",
-        price: 25,
-        title: "Blood Glucose Test",
-      },
-    ],
-    "C-Reactive Protein (CRP) Test": [
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b1b",
-        clinic: "RS THT Proklamasi BSD",
-        description:
-          "The CRP Test identifies inflammation in the body, aiding in the early detection of various health issues. Monitoring CRP levels promotes proactive health management.",
-        price: 35,
-        title: "C-Reactive Protein (CRP) Test",
-      },
-    ],
-    "Thyroid Function Tests": [
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b19",
-        clinic: "RS Medika BSD",
-        description:
-          "Thyroid Function Tests evaluate the thyroid's performance, crucial for regulating metabolism. Timely detection of thyroid disorders ensures optimal energy levels and overall health.",
-        price: 50,
-        title: "Thyroid Function Tests",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b19",
-        clinic: "RS Medika BSD",
-        description:
-          "Thyroid Function Tests evaluate the thyroid's performance, crucial for regulating metabolism. Timely detection of thyroid disorders ensures optimal energy levels and overall health.",
-        price: 50,
-        title: "Thyroid Function Tests",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b19",
-        clinic: "RS Medika BSD",
-        description:
-          "Thyroid Function Tests evaluate the thyroid's performance, crucial for regulating metabolism. Timely detection of thyroid disorders ensures optimal energy levels and overall health.",
-        price: 50,
-        title: "Thyroid Function Tests",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b19",
-        clinic: "RS Medika BSD",
-        description:
-          "Thyroid Function Tests evaluate the thyroid's performance, crucial for regulating metabolism. Timely detection of thyroid disorders ensures optimal energy levels and overall health.",
-        price: 50,
-        title: "Thyroid Function Tests",
-      },
-    ],
-    "Vitamin D Test": [
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b1c",
-        clinic: "RS Medika BSD",
-        description:
-          "The Vitamin D Test assesses vitamin D levels, crucial for bone health and overall well-being. Monitoring vitamin D ensures a strong immune system and optimal health.",
-        price: 40,
-        title: "Vitamin D Test",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b1c",
-        clinic: "RS Medika BSD",
-        description:
-          "The Vitamin D Test assesses vitamin D levels, crucial for bone health and overall well-being. Monitoring vitamin D ensures a strong immune system and optimal health.",
-        price: 40,
-        title: "Vitamin D Test",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b1c",
-        clinic: "RS Medika BSD",
-        description:
-          "The Vitamin D Test assesses vitamin D levels, crucial for bone health and overall well-being. Monitoring vitamin D ensures a strong immune system and optimal health.",
-        price: 40,
-        title: "Vitamin D Test",
-      },
-      {
-        __typename: "Service",
-        _id: "65a79ba16d134a6e88660b1c",
-        clinic: "RS Medika BSD",
-        description:
-          "The Vitamin D Test assesses vitamin D levels, crucial for bone health and overall well-being. Monitoring vitamin D ensures a strong immune system and optimal health.",
-        price: 40,
-        title: "Vitamin D Test",
-      },
-    ],
-  };
-
   // STORE build data (to be displayed as bar graph)
   dataObj = {
     "Full Blood Count": [],
@@ -737,47 +634,51 @@ export default function Summary({ navigation, route }) {
     <ScrollView>
       <View style={styles.con}>
         {/* render test results */}
-        {Object.entries(dataObj).map(([testName, testData]) => {
-          if (testData.length > 0) {
-            return (
-              <View style={styles.card} key={testName}>
-                {/* test title */}
-                <Text style={styles.title}>{testName}</Text>
-                {/* sub tests */}
-                {testData.map((data, index) => (
-                  <View style={styles.chartCon} key={index}>
-                    {data.map((chartData, chartIndex) => (
-                      <StackedBarChart
-                        key={chartIndex}
-                        data={{
-                          labels: chartData.labels,
-                          legend: chartData.legend,
-                          data: chartData.data,
-                          barColors: chartData.barColors,
-                        }}
-                        width={Dimensions.get("window").width - 100}
-                        height={250}
-                        withHorizontalLabels={true}
-                        chartConfig={{
-                          backgroundColor: "#e26a00",
-                          backgroundGradientFrom: "#fb8c00",
-                          backgroundGradientTo: "#ffa726",
-                          decimalPlaces: 2,
-                          color: (opacity = 1) =>
-                            `rgba(255, 255, 255, ${opacity})`,
-                          style: {
-                            borderRadius: 16,
-                          },
-                        }}
-                      />
-                    ))}
-                  </View>
-                ))}
-              </View>
-            );
-          }
-          return null;
-        })}
+        {reports.length === 0 ? (
+          <Text>You have no reports yet.</Text>
+        ) : (
+          Object.entries(dataObj).map(([testName, testData]) => {
+            if (testData.length > 0) {
+              return (
+                <View style={styles.card} key={testName}>
+                  {/* test title */}
+                  <Text style={styles.title}>{testName}</Text>
+                  {/* sub tests */}
+                  {testData.map((data, index) => (
+                    <View style={styles.chartCon} key={index}>
+                      {data.map((chartData, chartIndex) => (
+                        <StackedBarChart
+                          key={chartIndex}
+                          data={{
+                            labels: chartData.labels,
+                            legend: chartData.legend,
+                            data: chartData.data,
+                            barColors: chartData.barColors,
+                          }}
+                          width={Dimensions.get("window").width - 100}
+                          height={250}
+                          withHorizontalLabels={true}
+                          chartConfig={{
+                            backgroundColor: "#e26a00",
+                            backgroundGradientFrom: "#fb8c00",
+                            backgroundGradientTo: "#ffa726",
+                            decimalPlaces: 2,
+                            color: (opacity = 1) =>
+                              `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                              borderRadius: 16,
+                            },
+                          }}
+                        />
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              );
+            }
+            return null;
+          })
+        )}
       </View>
     </ScrollView>
   );

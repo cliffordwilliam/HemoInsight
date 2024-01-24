@@ -11,6 +11,7 @@ import Login from "../screens/Login";
 import Register from "../screens/Register";
 import MyHealthRecord from "../screens/MyHealthRecord";
 import CreateReport from "../screens/CreateReport";
+import HealthNew from "../screens/HealthNews";
 import ReportList from "../screens/ReportList";
 import ReportDetail from "../screens/ReportDetail";
 import FamilyMemberList from "../screens/FamilyMemberList";
@@ -20,9 +21,9 @@ import Geolocation from "../screens/Geolocation";
 import Result from "../screens/Result";
 import CheckServices from "../screens/CheckServices";
 import ChartPage from "../screens/ResultPage";
-import Summary from "../screens/Summary";
-import { Pressable } from "react-native";
 import LandingPage from "../screens/LandingPage";
+import { Pressable } from "react-native";
+import Summary from "../screens/Summary";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +45,6 @@ const StackReport = () => {
       <Stack.Screen name="ChooseLab" component={Geolocation} />
       <Stack.Screen name="ReportList" component={ReportList} />
       <Stack.Screen name="ChartPage" component={ChartPage} />
-
       <Stack.Screen
         name="ReportDetail"
         component={ReportDetail}
@@ -59,7 +59,7 @@ const StackUser = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen name="ListUser" component={MyHealthRecord} />
-      {/* <Stack.Screen name="DetailUser" component={Homepage} /> */}
+      <Stack.Screen name="Summary" component={Summary} />
     </Stack.Navigator>
   );
 };
@@ -76,7 +76,7 @@ export default function MainStack() {
               let iconName;
               if (route.name === "Home") {
                 iconName = focused ? "home" : "home-outline";
-              } else if (route.name === "Health Services") {
+              } else if (route.name === "Reports") {
                 iconName = focused ? "list" : "list-outline";
               } else if (route.name === "My Health Profile") {
                 iconName = focused ? "people" : "people-outline";
@@ -103,7 +103,7 @@ export default function MainStack() {
             options={{
               headerShown: false,
             }}
-            name="Health Services"
+            name="Reports"
             component={StackReport}
           />
 
@@ -118,23 +118,25 @@ export default function MainStack() {
         </Tab.Navigator>
       ) : (
         <Tab.Navigator
-          initialRouteName="Welcome"
-          screenOptions={({ route }) => (
-            {
+          initialRouteName="Login"
+          screenOptions={
+            ({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
                 let iconName;
                 if (route.name === "Register") {
                   iconName = focused ? "person" : "person-outline";
                 } else if (route.name === "Login") {
                   iconName = focused ? "log-in" : "log-in-outline";
+                } else if (route.name === "LandingPage") {
+                  iconName = focused ? "home" : "home-outline";
                 }
                 return <Ionicons name={iconName} size={size} color={color} />;
               },
               tabBarActiveTintColor: "tomato",
               tabBarInactiveTintColor: "gray",
-            },
-            { tabBarStyle: { display: "none" } } // hide bottom
-          )}
+            })
+            // ,{ tabBarStyle: { display: "none" } } // hide bottom
+          }
         >
           <Tab.Screen
             name="Register"
@@ -147,7 +149,7 @@ export default function MainStack() {
             options={{ headerShown: false }} // hide
           />
           <Tab.Screen
-            name="Welcome"
+            name="LandingPage"
             component={LandingPage}
             options={{ headerShown: false }} // hide
           />

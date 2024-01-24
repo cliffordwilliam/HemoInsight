@@ -141,8 +141,8 @@ export default function Geolocation({ navigation, route }) {
       setInitialRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
       });
     };
     // call

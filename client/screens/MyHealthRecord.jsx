@@ -8,25 +8,31 @@ import {
   TextInput,
 } from "react-native";
 import { LOGGEDINUSER, GET_REPORT_BY_OWNERID } from "../config/queries";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 
 export default function MyHealthRecord({ navigation, route }) {
-  // ONREADY loggedInData
-  const { data: loggedInData, loading: loggedInLoading } = useQuery(
-    LOGGEDINUSER,
-    {
+  // state
+  const [famMember, setFamMember] = useState([]);
+  // LAZY query loggedin
+  const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
+    useLazyQuery(LOGGEDINUSER, {
       onCompleted: () => {
         console.log("Home page -> onCompleted QueryLOGGEDINUSER", loggedInData);
+        setFamMember(loggedInData?.loggedIn?.childs);
       },
       refetchQueries: [LOGGEDINUSER],
       fetchPolicy: "network-only",
-    }
-  );
+    });
+  // ONREADY + on navigate here -> LAZY query loggedin
+  useEffect(() => {
+    funcLoggedIn();
+  }, [route]);
   // do not render if data not here yet
   if (loggedInLoading) {
     return;
   }
-  const famMember = loggedInData?.loggedIn?.childs;
+  // const famMember = loggedInData?.loggedIn?.childs;
   return (
     <ScrollView>
       <View style={styles.con}>

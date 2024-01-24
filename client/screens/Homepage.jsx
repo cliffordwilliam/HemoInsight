@@ -135,12 +135,27 @@ export default function Homepage({ navigation }) {
   if (loggedInLoading) {
     return <Text>Loading</Text>;
   }
+  // green? gold?
+  const mainColor =
+    loggedInData?.loggedIn.status === "Premium" ? "#CCA300" : "#59BB85";
   // render
   return (
     <ScrollView style={styles.background}>
       {/* header */}
-
-      <View style={styles.header}>
+      <View
+        style={{
+          backgroundColor: mainColor,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 12,
+          paddingTop: 40,
+          borderBottomLeftRadius: 16,
+          borderBottomRightRadius: 16,
+          height: 200,
+          paddingHorizontal: 25,
+        }}
+      >
         {/* text con */}
         <View style={styles.headerTextCon}>
           {/* user name */}
@@ -197,7 +212,12 @@ export default function Homepage({ navigation }) {
                   {/* <Text>Height: {loggedInData?.loggedIn.height}</Text> */}
                   {/* <Text>Address: {loggedInData?.loggedIn.address}</Text> */}
                   {/* status */}
-                  <Text style={styles.profileCardTopSectionStatus}>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      color: mainColor,
+                    }}
+                  >
                     Status: {loggedInData?.loggedIn.status}
                   </Text>
                   {/* commorbidity */}
@@ -209,37 +229,36 @@ export default function Homepage({ navigation }) {
                     {/*  weight */}
                     <View style={styles.profileCardTopSectionDataValueCon}>
                       {/* dot */}
-                      <View style={styles.profileCardTopSectionDataDot}></View>
+                      <View
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: 10 / 2,
+                          backgroundColor: mainColor,
+                          marginRight: 4,
+                        }}
+                      ></View>
                       {/* value */}
                       <Text>Weight: {loggedInData?.loggedIn.weight}</Text>
                     </View>
                     {/*  weight */}
                     <View style={styles.profileCardTopSectionDataValueCon}>
                       {/* dot */}
-                      <View style={styles.profileCardTopSectionDataDot}></View>
+                      <View
+                        style={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: 10 / 2,
+                          backgroundColor: mainColor,
+                          marginRight: 4,
+                        }}
+                      ></View>
                       {/* value */}
                       <Text>Height: {loggedInData?.loggedIn.height}</Text>
                     </View>
                   </View>
                 </View>
               </View>
-              {/* createReport buttons con */}
-
-              {loggedInData?.loggedIn.status == "Premium" ? (
-                <View style={styles.profileCardTopSectionButtonCon}>
-                  {/* onSite */}
-                  <View style={styles.premiumTag}>
-                    <Text style={styles.buttonTextPremium}>Premium</Text>
-                  </View>
-                </View>
-              ) : (
-                <View style={styles.profileCardTopSectionButtonCon}>
-                  {/* onSite */}
-                  <View style={styles.button}>
-                    <Text style={styles.buttonText}>Regular</Text>
-                  </View>
-                </View>
-              )}
             </>
           )}
         </View>
@@ -268,53 +287,40 @@ export default function Homepage({ navigation }) {
                 </Text>
               </View>
             </View>
-            <View>
+            {/* premium card */}
+            <View
+              style={{
+                width: "100%",
+                borderRadius: 8,
+                padding: 12,
+                borderWidth: 2,
+                borderColor: "#59BB85",
+              }}
+            >
+              <Text style={styles.bannerCardBodyTitle}>
+                Don't Miss Out – Act Now for a Healthier, Happier You!
+              </Text>
               <View
                 style={{
-                  width: 410,
-                  borderRadius: 10,
-                  height: 250,
-                  margin: 3,
-                  borderWidth: 2,
-                  borderColor: "#59BB85",
+                  width: "100%",
+                  borderRadius: 8,
+                  backgroundColor: "#59BB85",
+                  alignContent: "center",
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "700",
-                    padding: 12,
-                  }}
-                >
-                  Don't Miss Out – Act Now for a Healthier, Happier You!
-                </Text>
-                <View
-                  style={{
-                    width: 380,
-                    borderRadius: 10,
-                    height: 140,
-                    margin: 3,
-                    borderWidth: 2,
-                    borderColor: "#59BB85",
-                    backgroundColor: "#59BB85",
-                    alignContent: "center",
-                    marginLeft: 10,
-                  }}
-                >
-                  <Pressable onPress={stripe} style={styles.style}>
-                    <View style={{ margin: 12, gap: 10 }}>
-                      <Text style={styles.buttonText}>
-                        $79,00 Annual Subscription Fee
-                      </Text>
-                      <Text style={styles.bannerCardBodyTitle2}>
-                        Enjoy all year 10% discount from all services available.
-                      </Text>
-                      <View>
-                        <Text style={styles.buttonText}>Subscribe Now!</Text>
-                      </View>
+                <Pressable onPress={stripe} style={styles.style}>
+                  <View style={{ margin: 12, gap: 10 }}>
+                    <Text style={styles.buttonText}>
+                      $79,00 Annual Subscription Fee
+                    </Text>
+                    <Text style={styles.bannerCardBodyTitle2}>
+                      Enjoy all year 10% discount from all services available.
+                    </Text>
+                    <View>
+                      <Text style={styles.buttonText}>Subscribe Now!</Text>
                     </View>
-                  </Pressable>
-                </View>
+                  </View>
+                </Pressable>
               </View>
             </View>
           </>
@@ -324,7 +330,16 @@ export default function Homepage({ navigation }) {
 
         <View style={styles.logoutButtonCon}>
           {/* logout */}
-          <Pressable style={styles.button} onPress={handleLogout}>
+          <Pressable
+            style={{
+              backgroundColor: mainColor,
+              // width: "100%",
+              padding: 10,
+              paddingHorizontal: 20,
+              borderRadius: 8,
+            }}
+            onPress={handleLogout}
+          >
             <Text style={styles.buttonText}>Logout</Text>
           </Pressable>
         </View>
@@ -340,7 +355,6 @@ export default function Homepage({ navigation }) {
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   background: {
     backgroundColor: "#eeeeee",
@@ -500,15 +514,14 @@ const styles = StyleSheet.create({
   },
   bannerCardBody: {
     padding: 10,
-    marginVertical: 20,
   },
   bannerCardBodyTitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "800",
     marginBottom: 4,
   },
   bannerCardBodyContent: {
-    fontSize: 19,
+    fontSize: 16,
   },
   bannerCardBodyTitle2: {
     fontSize: 16,

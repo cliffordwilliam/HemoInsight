@@ -84,9 +84,10 @@ export default function ReportListOfMember({ navigation, route }) {
             <Text style={styles.backButtonText}>ReportListOfMember</Text>
           </Pressable>
         </View>
-        {/* reports */}
-        {reportsData?.reportsByOwnerId?.map((report) => {
-          return (
+        {reportsData?.reportsByOwnerId?.length > 0 ? (
+          // Render reports if there are any
+          reportsData?.reportsByOwnerId?.map((report) => (
+            // report card
             // report card
             <View style={styles.card} key={report._id}>
               {/* owner */}
@@ -165,8 +166,11 @@ export default function ReportListOfMember({ navigation, route }) {
                 </>
               )}
             </View>
-          );
-        })}
+          ))
+        ) : (
+          // Display a message when there are no reports
+          <Text style={styles.noReportsText}>You have no reports yet.</Text>
+        )}
       </View>
     </ScrollView>
   );

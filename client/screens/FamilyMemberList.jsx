@@ -51,6 +51,9 @@ export default function FamilyMemberList({ navigation, route }) {
   if (loggedInLoading) {
     return <Text>Loading</Text>;
   }
+  // green? gold?
+  const mainColor =
+    loggedInData?.loggedIn.status === "Premium" ? "#CCA300" : "#59BB85";
   // render
   return (
     <ScrollView style={styles.background}>
@@ -61,7 +64,13 @@ export default function FamilyMemberList({ navigation, route }) {
           onPress={() => {
             navigation.navigate("AddFam");
           }}
-          style={styles.button}
+          style={{
+            backgroundColor: mainColor,
+            width: "100%",
+            padding: 10,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+          }}
         >
           <Text style={styles.buttonText}>Add a member</Text>
         </Pressable>
@@ -78,7 +87,13 @@ export default function FamilyMemberList({ navigation, route }) {
                   ownerId: loggedInData?.loggedIn?._id,
                 });
               }}
-              style={styles.button}
+              style={{
+                backgroundColor: mainColor,
+                width: "100%",
+                padding: 10,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+              }}
             >
               <Text style={styles.buttonText}>Book Test</Text>
             </Pressable>
@@ -89,7 +104,13 @@ export default function FamilyMemberList({ navigation, route }) {
                   ownerId: loggedInData?.loggedIn?._id,
                 });
               }}
-              style={styles.button}
+              style={{
+                backgroundColor: mainColor,
+                width: "100%",
+                padding: 10,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+              }}
             >
               <Text style={styles.buttonText}>Show Reports</Text>
             </Pressable>
@@ -101,7 +122,12 @@ export default function FamilyMemberList({ navigation, route }) {
               {loggedInData?.loggedIn?.username}
             </Text>
             {/* owner commorbidity */}
-            <Text style={styles.cardCommorbidity}>
+            <Text
+              style={{
+                fontWeight: "500",
+                color: mainColor,
+              }}
+            >
               Comorbidity: {loggedInData?.loggedIn?.commorbidity}
             </Text>
           </View>
@@ -122,7 +148,13 @@ export default function FamilyMemberList({ navigation, route }) {
                       ownerId: member._id,
                     });
                   }}
-                  style={styles.button}
+                  style={{
+                    backgroundColor: mainColor,
+                    width: "100%",
+                    padding: 10,
+                    paddingHorizontal: 20,
+                    borderRadius: 8,
+                  }}
                 >
                   <Text style={styles.buttonText}>Book Test</Text>
                 </Pressable>
@@ -133,7 +165,13 @@ export default function FamilyMemberList({ navigation, route }) {
                       ownerId: member._id,
                     });
                   }}
-                  style={styles.button}
+                  style={{
+                    backgroundColor: mainColor,
+                    width: "100%",
+                    padding: 10,
+                    paddingHorizontal: 20,
+                    borderRadius: 8,
+                  }}
                 >
                   <Text style={styles.buttonText}>Show Reports</Text>
                 </Pressable>
@@ -143,7 +181,12 @@ export default function FamilyMemberList({ navigation, route }) {
                 {/* fam username */}
                 <Text style={styles.username}>{member?.username}</Text>
                 {/* fam commorbidity */}
-                <Text style={styles.cardCommorbidity}>
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    color: mainColor,
+                  }}
+                >
                   Comorbidity: {member?.commorbidity}
                 </Text>
               </View>
