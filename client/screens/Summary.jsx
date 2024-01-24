@@ -506,7 +506,7 @@ export default function Summary({ navigation, route }) {
         // rand
         let hivResult = [];
         for (let i = 0; i < amount; i++) {
-          hivResult.push([getRandomBoolean()]);
+          hivResult.push([getRandomValue(100, 1500)]);
         }
         // push
         dataObj["HIV Test"].push([
@@ -644,32 +644,37 @@ export default function Summary({ navigation, route }) {
                   {/* test title */}
                   <Text style={styles.title}>{testName}</Text>
                   {/* sub tests */}
+
                   {testData.map((data, index) => (
                     <View style={styles.chartCon} key={index}>
                       {data.map((chartData, chartIndex) => (
-                        <StackedBarChart
-                          key={chartIndex}
-                          data={{
-                            labels: chartData.labels,
-                            legend: chartData.legend,
-                            data: chartData.data,
-                            barColors: chartData.barColors,
-                          }}
-                          width={Dimensions.get("window").width - 100}
-                          height={250}
-                          withHorizontalLabels={true}
-                          chartConfig={{
-                            backgroundColor: "#e26a00",
-                            backgroundGradientFrom: "#fb8c00",
-                            backgroundGradientTo: "#ffa726",
-                            decimalPlaces: 2,
-                            color: (opacity = 1) =>
-                              `rgba(255, 255, 255, ${opacity})`,
-                            style: {
-                              borderRadius: 16,
-                            },
-                          }}
-                        />
+                        <View>
+                          <Text>{chartData.legend}</Text>
+                          <StackedBarChart
+                            key={chartIndex}
+                            data={{
+                              labels: chartData.labels,
+                              // legend: chartData.legend,
+                              data: chartData.data,
+                              barColors: chartData.barColors,
+                            }}
+                            width={Dimensions.get("window").width - 80}
+                            height={250}
+                            withHorizontalLabels={true}
+                            chartConfig={{
+                              backgroundColor: "#e26a00",
+                              backgroundGradientFrom: "#fb8c00",
+                              backgroundGradientTo: "#ffa726",
+                              decimalPlaces: 2,
+                              color: (opacity = 1) =>
+                                `rgba(255, 255, 255, ${opacity})`,
+                              style: {
+                                borderRadius: 16,
+                                padding: 70,
+                              },
+                            }}
+                          />
+                        </View>
                       ))}
                     </View>
                   ))}

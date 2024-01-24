@@ -14,6 +14,7 @@ type Query{
 
 type Mutation {
     createReportServices(payload: ReportServiceInput): ReportService
+    deleteReportServices(payload: ReportServiceInput): ReportService
 }
 
 input ReportServiceInput {

@@ -38,4 +38,13 @@ module.exports = class ReportService {
       throw error;
     }
   }
+
+  static async deleteReportService(reportServiceId) {
+    try {
+      console.log(reportServiceId, "to be deleted from model ");
+      await this.collection().deleteOne({ _id: new ObjectId(reportServiceId) });
+    } catch (error) {
+      throw error;
+    }
+  }
 };

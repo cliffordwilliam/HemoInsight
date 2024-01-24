@@ -46,6 +46,11 @@ export default function ChartPage({ navigation, route }) {
   function getRandomValue(min, max) {
     return (Math.random() * (max - min) + min).toFixed(1);
   }
+
+  function getRandomBoolean() {
+    return Math.random() < 0.5;
+  }
+
   // data is here -> check each title -> create data -> push to dataObj
   for (let i = 0; i < servicesList.length; i++) {
     const service = servicesList[i];
@@ -92,22 +97,28 @@ export default function ChartPage({ navigation, route }) {
       case "Blood Glucose Test":
         // rand 1
         const fastingGlucose = getRandomValue(70, 100); // in mg/dL
-        const postprandialGlucose = getRandomValue(70, 140); // in mg/dL
+        const postprandialGlucose = getRandomValue(70, 130); // in mg/dL
         // rand 2
         const glycatedAlbumin = getRandomValue(10, 18); // in percentage
         // push
         dataObj["Blood Glucose Test"].push([
           // data 1
           {
-            labels: ["Fasting Glucose", "Postprandial Glucose"],
-            legend: ["Result"],
+            labels: [
+              "Fasting Glucose",
+              "                       Postprandial Glucose",
+            ],
+            legend: [
+              `${fastingGlucose < 100 ? "Normal" : "Prediabetic"}`,
+              `${postprandialGlucose < 140 ? "Normal" : "Prediabetic"}`,
+            ],
             data: [[fastingGlucose], [postprandialGlucose]],
             barColors: ["#dfe4ea", "#ced6e0"],
           },
           // data 2
           {
             labels: ["Glycated Albumin"],
-            legend: ["Result"],
+            legend: [`${glycatedAlbumin < 10 ? "Normal" : "Abnormal"}`],
             data: [[glycatedAlbumin]],
             barColors: ["#abcdef"],
           },
@@ -115,22 +126,34 @@ export default function ChartPage({ navigation, route }) {
         break;
       case "Long Term Glucose HbA1c Test":
         // rand 1
-        const hbA1c = getRandomValue(4, 6); // in percentage
+        const hbA1c = getRandomValue(4, 9); // in percentage
         // rand 2
-        const fastingBloodSugar = getRandomValue(70, 100); // in mg/dL
+        const fastingBloodSugar = getRandomValue(50, 300); // in mg/dL
         // push
         dataObj["Long Term Glucose HbA1c Test"].push([
           // data 1
           {
             labels: ["HbA1c Level"],
-            legend: ["Result"],
+            legend: [
+              `${
+                hbA1c > 4.0 ? "Normal" : hbA1c > 6 ? "Prediabetic" : "Diabetic"
+              }`,
+            ],
             data: [[hbA1c]],
             barColors: ["#dfe4ea"],
           },
           // data 2
           {
             labels: ["Fasting Blood Sugar"],
-            legend: ["Result"],
+            legend: [
+              `${
+                fastingBloodSugar > 100
+                  ? "Normal"
+                  : fastingBloodSugar > 130
+                  ? "Prediabetic"
+                  : "Diabetic"
+              }`,
+            ],
             data: [[fastingBloodSugar]],
             barColors: ["#abcdef"],
           },
@@ -138,22 +161,22 @@ export default function ChartPage({ navigation, route }) {
         break;
       case "Prostate Specific Antigen (PSA) Test":
         // rand 1
-        const psaLevel = getRandomValue(0.1, 4.0); // in ng/mL (Example range for PSA level)
+        const psaLevel = getRandomValue(0.1, 10.0); // in ng/mL (Example range for PSA level)
         // rand 2
-        const freePSALevel = getRandomValue(0.1, 1.0); // in ng/mL (Example range for Free PSA level)
+        const freePSALevel = getRandomValue(0.1, 3.0); // in ng/mL (Example range for Free PSA level)
         // push
         dataObj["Prostate Specific Antigen (PSA) Test"].push([
           // data 1
           {
             labels: ["PSA Level"],
-            legend: ["Result"],
+            legend: [`${psaLevel > 4.0 ? "Abnormal" : "Normal"}`],
             data: [[psaLevel]],
             barColors: ["#dfe4ea"],
           },
           // data 2
           {
             labels: ["Free PSA Level"],
-            legend: ["Result"],
+            legend: [`${freePSALevel > 2.5 ? "Abnormal" : "Normal"}`],
             data: [[freePSALevel]],
             barColors: ["#abcdef"],
           },
@@ -376,13 +399,25 @@ export default function ChartPage({ navigation, route }) {
         break;
       case "C-Reactive Protein (CRP) Test":
         // rand
-        const crpLevel = getRandomValue(0.1, 10.0); // in mg/L (Example range for CRP)
+        const crpLevel = getRandomValue(0.3, 20.0); // in mg/L (Example range for CRP)
         // push
         dataObj["C-Reactive Protein (CRP) Test"].push([
           // data
           {
             labels: ["CRP Level"],
-            legend: ["Result"],
+            legend: [
+              `${
+                crpLevel < 0.3
+                  ? "Normal"
+                  : crpLevel <= 1.0
+                  ? "Normal/Minor"
+                  : crpLevel <= 10.0
+                  ? "Moderate"
+                  : crpLevel <= 50.0
+                  ? "Elevated"
+                  : "Severe"
+              }`,
+            ],
             data: [[crpLevel]],
             barColors: ["#dfe4ea"],
           },
@@ -390,27 +425,37 @@ export default function ChartPage({ navigation, route }) {
         break;
       case "HIV Test":
         // rand
-        const hivResult = getRandomBoolean(); // Simulate a positive or negative result
+
+        const hivResult = getRandomValue(100, 1500);
+        // const hivResult = getRandomBoolean(); // Simulate a positive or negative result
         // push
         dataObj["HIV Test"].push([
           // data
           {
             labels: ["HIV Result"],
-            legend: ["Result"],
-            data: [[hivResult ? "Positive" : "Negative"]],
+            legend: [`${hivResult >= 200 ? "Advance HIV" : "Negative"}`],
+            data: [[hivResult]],
             barColors: [hivResult ? "#ff0000" : "#00ff00"], // Red for positive, green for negative
           },
         ]);
         break;
       case "Rheumatoid Factor Test":
         // rand
-        const rheumatoidFactor = getRandomValue(0, 30); // in IU/mL (Example range for Rheumatoid Factor)
+        const rheumatoidFactor = getRandomValue(0, 50); // in IU/mL (Example range for Rheumatoid Factor)
         // push
         dataObj["Rheumatoid Factor Test"].push([
           // data
           {
             labels: ["Rheumatoid Factor"],
-            legend: ["Result"],
+            legend: [
+              `${
+                rheumatoidFactor <= 20
+                  ? "Normal"
+                  : rheumatoidFactor <= 50
+                  ? "Elevated"
+                  : "High"
+              }`,
+            ],
             data: [[rheumatoidFactor]],
             barColors: ["#dfe4ea"],
           },
@@ -424,7 +469,15 @@ export default function ChartPage({ navigation, route }) {
           // data
           {
             labels: ["hCG Level"],
-            legend: ["Result"],
+            legend: [
+              `${
+                hcgLevel <= 5
+                  ? "Negative"
+                  : hcgLevel <= 25
+                  ? "grey area"
+                  : "Positive"
+              }`,
+            ],
             data: [[hcgLevel]],
             barColors: ["#dfe4ea"],
           },
@@ -519,8 +572,8 @@ export default function ChartPage({ navigation, route }) {
                           data: chartData.data,
                           barColors: chartData.barColors,
                         }}
-                        width={Dimensions.get("window").width - 100}
-                        height={250}
+                        width={Dimensions.get("window").width - 50}
+                        height={300}
                         withHorizontalLabels={true}
                         chartConfig={{
                           backgroundColor: "#e26a00",

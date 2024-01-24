@@ -120,7 +120,7 @@ export default function MainStack() {
         <Tab.Navigator
           initialRouteName="Login"
           screenOptions={
-            ({ route }) => ({
+            (({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
                 let iconName;
                 if (route.name === "Register") {
@@ -134,8 +134,8 @@ export default function MainStack() {
               },
               tabBarActiveTintColor: "tomato",
               tabBarInactiveTintColor: "gray",
-            })
-            // ,{ tabBarStyle: { display: "none" } } // hide bottom
+            }),
+            { tabBarStyle: { display: "none" } }) // hide bottom0
           }
         >
           <Tab.Screen
@@ -151,7 +151,7 @@ export default function MainStack() {
           <Tab.Screen
             name="LandingPage"
             component={LandingPage}
-            options={{ headerShown: false }} // hide
+            options={{ headerShown: false }}
           />
         </Tab.Navigator>
       )}

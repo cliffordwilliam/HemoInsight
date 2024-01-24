@@ -85,6 +85,7 @@ export default function FamilyMemberList({ navigation, route }) {
               onPress={() => {
                 navigation.navigate("ChooseLab", {
                   ownerId: loggedInData?.loggedIn?._id,
+                  commorbid: loggedInData?.loggedIn?.commorbidity,
                 });
               }}
               style={{
@@ -146,6 +147,7 @@ export default function FamilyMemberList({ navigation, route }) {
                   onPress={() => {
                     navigation.navigate("ChooseLab", {
                       ownerId: member._id,
+                      commorbid: member.commorbidity,
                     });
                   }}
                   style={{
@@ -163,6 +165,7 @@ export default function FamilyMemberList({ navigation, route }) {
                   onPress={() => {
                     navigation.navigate("ReportListOfMember", {
                       ownerId: member._id,
+                      commorbid: member?.commorbidity,
                     });
                   }}
                   style={{

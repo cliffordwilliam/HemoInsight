@@ -50,7 +50,7 @@ export default function Login({ navigation }) {
         value={username}
         onChangeText={(text) => setUsername(text)}
       />
-      <Text style={styles.desc}>Your name</Text>
+      {/* <Text style={styles.desc}>Your name</Text> */}
       {/* password */}
       <Text style={styles.label}>Password</Text>
       <TextInput
@@ -60,17 +60,19 @@ export default function Login({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <Text style={styles.desc}>Your password</Text>
+      {/* <Text style={styles.desc}>Your password</Text> */}
       {/* button submit */}
       <Pressable onPress={mutateLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Sign up</Text>
+        <Text style={styles.buttonText}>Sign In</Text>
       </Pressable>
       {/* kick register */}
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={styles.link}>Don't have an account? Join us</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
-        <Text style={styles.link}>Welcome</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("LandingPage")}>
+        <Text style={{ color: "gray", margin: 5, fontSize: 12 }}>
+          Hemo Insight Inc.
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     width: "100%",
+    marginBottom: 7,
   },
   label: {
     height: 25,

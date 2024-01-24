@@ -197,7 +197,7 @@ export default function Homepage({ navigation }) {
                 <Image
                   style={styles.profileCardTopSectionImage}
                   source={{
-                    uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
+                    uri: "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                   }}
                 />
                 {/* logged in user text data con */}
@@ -222,7 +222,7 @@ export default function Homepage({ navigation }) {
                   </Text>
                   {/* commorbidity */}
                   <Text style={styles.profileCardTopSectionCommorbidity}>
-                    Commorbidity: {loggedInData?.loggedIn.commorbidity}
+                    Comorbidity: {loggedInData?.loggedIn.commorbidity}
                   </Text>
                   {/* dot text con */}
                   <View style={styles.profileCardTopSectionDataCon}>

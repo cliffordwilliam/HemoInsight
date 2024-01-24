@@ -2,7 +2,11 @@ import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import React, { useEffect, useState, useRef } from "react";
 import MapView from "react-native-maps";
 import { Marker, Callout, Circle } from "react-native-maps";
-import { CREATEREPORT, LOGGEDINUSER } from "../config/queries";
+import {
+  CREATEREPORT,
+  LOGGEDINUSER,
+  SERVICETITLEDESC,
+} from "../config/queries";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import * as Location from "expo-location";
@@ -84,9 +88,14 @@ const dataHospital = [
 export default function Geolocation({ navigation, route }) {
   // params
   const { ownerId } = route.params;
+  const { commorbid } = route.params;
   // state
   const [labQuery, setLabQuery] = useState("");
   const [chooseLab, setChooseLab] = useState({});
+  const [recommededLab, setRecommendedLab] = useState([]);
+  const [extractedClinic, setExtractredClinic] = useState([]);
+
+  console.log(recommededLab, `INIININNINININI`);
   const [currentLocation, setCurrentLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -94,6 +103,21 @@ export default function Geolocation({ navigation, route }) {
     longitudeDelta: 0.02,
   }); // DO NOT USE NULL - sometimes it is late then it crash
   const [initialRegion, setInitialRegion] = useState(null); // OK
+  //get recommendation of services
+  const { data: RecommendationResponse } = useQuery(SERVICETITLEDESC, {
+    variables: {
+      title: commorbid,
+    },
+    onCompleted: () => {
+      console.log(
+        "ini data services",
+        RecommendationResponse.serviceTitleDescription.length,
+        ` ___________________________`
+      );
+      setRecommendedLab(RecommendationResponse.serviceTitleDescription);
+    },
+  });
+
   // create report
   const [MutateReport, { data: AddReportResponse }] = useMutation(
     CREATEREPORT,
@@ -226,6 +250,32 @@ export default function Geolocation({ navigation, route }) {
               >
                 <Text style={styles.buttonText}>OnVisit</Text>
               </Pressable>
+
+              {recommededLab.map((lab) => {
+                if (lab.clinic == chooseLab.name) {
+                  return (
+                    <View
+                      style={{
+                        padding: 2,
+                        paddingHorizontal: 10,
+                        borderRadius: 8,
+                        width: 155,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          textAlign: "right",
+                          fontStyle: "italic",
+                          color: "darkred",
+                        }}
+                      >
+                        Recommended based on patient's comorbidity - {lab.title}
+                      </Text>
+                    </View>
+                  );
+                }
+              })}
             </View>
           </>
         ) : (
@@ -243,7 +293,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: "65%",
+    height: "64%",
   },
   choosenCard: {
     flex: 1,
@@ -276,6 +326,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
+    height: 45,
   },
   fullButton: {
     marginTop: 12,

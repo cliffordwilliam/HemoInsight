@@ -165,6 +165,8 @@ export default function ReportDetail({ route, navigation }) {
               },
             },
           });
+        } else {
+          navigation.navigate("ReportList");
         }
       },
       refetchQueries: [GET_REPORT_BY_ID],
@@ -449,7 +451,7 @@ export default function ReportDetail({ route, navigation }) {
                     <Text>
                       Price: Rp
                       {service?.price}
-                      ,000
+                      .000
                     </Text>
                   </View>
                 ))
@@ -475,17 +477,26 @@ export default function ReportDetail({ route, navigation }) {
                 backgroundColor: "#FFFFC2",
               }}
             >
-              <Text style={styles.subTotalDisc}>Member Disc 10%</Text>
+              <Text style={styles.subTotalDisc}>
+                Membership Discount 10% - Rp: {(subTotal * 0.9).toFixed(3)}
+              </Text>
               {/* premium */}
               <Text style={styles.subTotalDisc}>
-                Applicable for Premium Membership only
+                Applicable for Premium Membership only membership
               </Text>
             </View>
 
             {/* total */}
-            <Text style={styles.total}>
+            {ReportById?.report?.status == "Premium" ? (
+              <Text style={styles.total}>
+                Total Rp: {(subTotal * 0.9).toFixed(3)}
+              </Text>
+            ) : (
+              <Text style={styles.total}>Total Rp: {subTotal.toFixed(3)}</Text>
+            )}
+            {/* <Text style={styles.total}>
               Total Rp: {(subTotal * 0.9).toFixed(3)}
-            </Text>
+            </Text> */}
             {/* pay button = go to ??? */}
             {ReportById?.report?.status == "unpaid" ? (
               <Pressable

@@ -26,6 +26,13 @@ const reportServiceMutations = {
       throw error;
     }
   },
+  deleteReportServices: async (_, { payload }) => {
+    try {
+      return await ReportService.deleteReportService(payload);
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 const reportServiceResolvers = {

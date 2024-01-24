@@ -18,6 +18,36 @@ export default function LandingPage({ navigation }) {
           uri: "https://media.discordapp.net/attachments/1156408374720737322/1197503175687688273/logo3.png?ex=65bb80bd&is=65a90bbd&hm=2830bca092551756d808d947401d7ff14014ba3e7d43d832d8a546ef0e598c0d&",
         }}
       />
+      <View style={{ flexDirection: "row" }}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Register");
+          }}
+          style={{
+            width: 100,
+            height: 50,
+            backgroundColor: "darkred",
+            borderRadius: 8,
+            margin: 15,
+          }}
+        >
+          <Text style={{ fontSize: 20, color: "white" }}>Register</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+          style={{
+            width: 100,
+            height: 50,
+            backgroundColor: "darkred",
+            borderRadius: 8,
+            margin: 15,
+          }}
+        >
+          <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -31,6 +61,7 @@ const styles = StyleSheet.create({
   logo: {
     width: "100%",
     height: "100%",
+    marginRight: 8,
   },
   header: {
     fontSize: 24,

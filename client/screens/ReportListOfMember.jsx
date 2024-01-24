@@ -127,14 +127,16 @@ export default function ReportListOfMember({ navigation, route }) {
                   <Pressable
                     onPress={() => {
                       setCompleted(true);
-                      console.log("hehe");
+                      navigation.navigate("ChartPage", {
+                        reportId: report._id,
+                      });
                     }}
                     style={styles.button}
                   >
                     <Text style={styles.buttonText}>Confirm Completion</Text>
                   </Pressable>
                   {/* user confirmed? */}
-                  {completed == true ? (
+                  {completed == false ? (
                     // show result button
                     <Pressable
                       onPress={() => {

@@ -69,10 +69,10 @@ export default function Register({ navigation }) {
         <Text style={styles.label}>Name:</Text>
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Full Name"
           onChangeText={(text) => setUsername(text)}
         />
-        <Text style={styles.desc}>Your name</Text>
+        {/* <Text style={styles.desc}>Your name</Text> */}
         {/* email */}
         <Text style={styles.label}>Email:</Text>
         <TextInput
@@ -80,7 +80,7 @@ export default function Register({ navigation }) {
           placeholder="Email Format Required"
           onChangeText={(text) => setEmail(text)}
         />
-        <Text style={styles.desc}>Your email</Text>
+        {/* <Text style={styles.desc}>Your email</Text> */}
         {/* password */}
         <Text style={styles.label}>Password:</Text>
         <TextInput
@@ -89,31 +89,31 @@ export default function Register({ navigation }) {
           placeholder="Minimal 6 Characters Password"
           secureTextEntry
         />
-        <Text style={styles.desc}>Your password</Text>
+        {/* <Text style={styles.desc}>Your password</Text> */}
         {/* birthday */}
-        <Text style={styles.label}>Birthdate:</Text>
+        <Text style={styles.label}>Birthdate (dd/mm/yyyy)</Text>
         <TextInput
           style={styles.input}
           placeholder="Birth Date"
           onChangeText={(text) => setBirthdate(text)}
         />
-        <Text style={styles.desc}>Your birthdate in dd/mm/yyyy</Text>
+        {/* <Text style={styles.desc}>Your birthdate in dd/mm/yyyy</Text> */}
         {/* weight */}
-        <Text style={styles.label}>Weight(Kg):</Text>
+        <Text style={styles.label}>Weight (Kg):</Text>
         <TextInput
           style={styles.input}
           onChangeText={(text) => setWeight(text)}
           placeholder="Weight"
         />
-        <Text style={styles.desc}>Your weight in kilogram</Text>
+        {/* <Text style={styles.desc}>Your weight in kilogram</Text> */}
         {/* height */}
-        <Text style={styles.label}>Height(Cm):</Text>
+        <Text style={styles.label}>Height (Cm):</Text>
         <TextInput
           style={styles.input}
           onChangeText={(text) => setHeight(text)}
           placeholder="Height"
         />
-        <Text style={styles.desc}>Your height in meters</Text>
+        {/* <Text style={styles.desc}>Your height in meters</Text> */}
         {/* address */}
         <Text style={styles.label}>Address:</Text>
         <TextInput
@@ -121,17 +121,21 @@ export default function Register({ navigation }) {
           onChangeText={(text) => setAddress(text)}
           placeholder="Address"
         />
-        <Text style={styles.desc}>Your home address</Text>
+        {/* <Text style={styles.desc}>Your home address</Text> */}
         {/* comorbidity */}
 
         <Text style={styles.label}>Comorbidity (Optional)</Text>
+        <Text style={styles.labeldesc}>
+          Do you have an existing medical condition? We can recommend health
+          services that suits your medical profile.
+        </Text>
         <SelectDropdown
           data={commorbidityList}
           onSelect={(selectedItem, index) => setCommorbidity(selectedItem)}
           buttonStyle={styles.input}
           search="true"
         />
-        <Text style={styles.desc}>Your sickness</Text>
+        {/* <Text style={styles.desc}>Your sickness</Text> */}
         {/* button submit */}
         <Pressable onPress={mutateRegister} style={styles.button}>
           <Text style={styles.buttonText}>Sign up</Text>
@@ -140,6 +144,9 @@ export default function Register({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.link}>Have an account? Log in</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("LandingPage")}>
+        <Text style={{color:"gray", margin:5, fontSize:12}}>Hemo Insight Inc.</Text>
+      </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -166,11 +173,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     width: "100%",
+    marginBottom: 10,
   },
   label: {
     height: 25,
     paddingHorizontal: 8,
     width: "100%",
+  },
+  labeldesc: {
+    height: 25,
+    paddingHorizontal: 8,
+    width: "100%",
+    color: "grey",
+    fontSize: 10,
+    marginBottom: 10,
   },
   desc: {
     height: 25,
