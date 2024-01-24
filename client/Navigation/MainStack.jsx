@@ -21,6 +21,7 @@ import Geolocation from "../screens/Geolocation";
 import Result from "../screens/Result";
 import CheckServices from "../screens/CheckServices";
 import ChartPage from "../screens/ResultPage";
+import Summary from "../screens/Summary";
 import { Pressable } from "react-native";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,8 +58,8 @@ const StackReport = () => {
 const StackUser = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ListUser" component={MyHealthRecord} />
-      {/* <Stack.Screen name="DetailUser" component={Homepage} /> */}
+      <Stack.Screen name="Records" component={MyHealthRecord} />
+      <Stack.Screen name="Summary" component={Summary} />
     </Stack.Navigator>
   );
 };
@@ -75,7 +76,7 @@ export default function MainStack() {
               let iconName;
               if (route.name === "Home") {
                 iconName = focused ? "home" : "home-outline";
-              } else if (route.name === "Reports") {
+              } else if (route.name === "Bookings") {
                 iconName = focused ? "list" : "list-outline";
               } else if (route.name === "My Health Profile") {
                 iconName = focused ? "people" : "people-outline";
@@ -102,7 +103,7 @@ export default function MainStack() {
             options={{
               headerShown: false,
             }}
-            name="Reports"
+            name="Bookings"
             component={StackReport}
           />
 

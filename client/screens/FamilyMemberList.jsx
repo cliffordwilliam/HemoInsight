@@ -9,12 +9,12 @@ export default function FamilyMemberList({ navigation, route }) {
   // LAZY query loggedin
   const [funcLoggedIn, { data: loggedInData, loading: loggedInLoading }] =
     useLazyQuery(LOGGEDINUSER, {
-      fetchPolicy: "network-only",
       onCompleted: () => {
         console.log("Home page -> onCompleted QueryLOGGEDINUSER", loggedInData);
         setFamMember(loggedInData?.loggedIn?.childs);
       },
       refetchQueries: [LOGGEDINUSER],
+      fetchPolicy: "network-only",
     });
   // ONREADY + on navigate here -> LAZY query loggedin
   useEffect(() => {

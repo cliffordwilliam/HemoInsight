@@ -6,7 +6,7 @@ import { DELETE_REPORT, GET_REPORT_BY_OWNERID } from "../config/queries";
 
 export default function ReportListOfMember({ navigation, route }) {
   // params
-  const OwnerId = route.params.ownerId;
+  const { ownerId } = route.params;
   // state
   const [completed, setCompleted] = useState(false);
   // ONREADY reports based on ownerId
@@ -14,7 +14,7 @@ export default function ReportListOfMember({ navigation, route }) {
     GET_REPORT_BY_OWNERID,
     {
       variables: {
-        ownerId: OwnerId,
+        ownerId,
       },
       onCompleted: () => {
         console.log(
