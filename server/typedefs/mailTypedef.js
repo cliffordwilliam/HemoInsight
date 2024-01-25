@@ -3,6 +3,6 @@ module.exports = userTypedef = `#graphql
     mail(payload: MailInput): String
   }
   input MailInput {
-    amountPaid: Int! # req
+    amountPaid: Float! # req
   }
 `;
