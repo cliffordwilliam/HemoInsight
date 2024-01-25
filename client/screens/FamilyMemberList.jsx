@@ -64,13 +64,7 @@ export default function FamilyMemberList({ navigation, route }) {
           onPress={() => {
             navigation.navigate("AddFam");
           }}
-          style={{
-            backgroundColor: mainColor,
-            width: "100%",
-            padding: 10,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-          }}
+          style={styles.button}
         >
           <Text style={styles.buttonText}>Add a member</Text>
         </Pressable>
@@ -88,13 +82,7 @@ export default function FamilyMemberList({ navigation, route }) {
                   commorbid: loggedInData?.loggedIn?.commorbidity,
                 });
               }}
-              style={{
-                backgroundColor: mainColor,
-                width: "100%",
-                padding: 10,
-                paddingHorizontal: 20,
-                borderRadius: 8,
-              }}
+              style={styles.button}
             >
               <Text style={styles.buttonText}>Book Test</Text>
             </Pressable>
@@ -105,13 +93,7 @@ export default function FamilyMemberList({ navigation, route }) {
                   ownerId: loggedInData?.loggedIn?._id,
                 });
               }}
-              style={{
-                backgroundColor: mainColor,
-                width: "100%",
-                padding: 10,
-                paddingHorizontal: 20,
-                borderRadius: 8,
-              }}
+              style={styles.button}
             >
               <Text style={styles.buttonText}>Show Reports</Text>
             </Pressable>
@@ -123,12 +105,7 @@ export default function FamilyMemberList({ navigation, route }) {
               {loggedInData?.loggedIn?.username}
             </Text>
             {/* owner commorbidity */}
-            <Text
-              style={{
-                fontWeight: "500",
-                color: mainColor,
-              }}
-            >
+            <Text style={styles.cardCommorbidity}>
               Comorbidity: {loggedInData?.loggedIn?.commorbidity}
             </Text>
           </View>
@@ -150,13 +127,7 @@ export default function FamilyMemberList({ navigation, route }) {
                       commorbid: member.commorbidity,
                     });
                   }}
-                  style={{
-                    backgroundColor: mainColor,
-                    width: "100%",
-                    padding: 10,
-                    paddingHorizontal: 20,
-                    borderRadius: 8,
-                  }}
+                  style={styles.button}
                 >
                   <Text style={styles.buttonText}>Book Test</Text>
                 </Pressable>
@@ -168,13 +139,7 @@ export default function FamilyMemberList({ navigation, route }) {
                       commorbid: member?.commorbidity,
                     });
                   }}
-                  style={{
-                    backgroundColor: mainColor,
-                    width: "100%",
-                    padding: 10,
-                    paddingHorizontal: 20,
-                    borderRadius: 8,
-                  }}
+                  style={styles.button}
                 >
                   <Text style={styles.buttonText}>Show Reports</Text>
                 </Pressable>
@@ -184,12 +149,7 @@ export default function FamilyMemberList({ navigation, route }) {
                 {/* fam username */}
                 <Text style={styles.username}>{member?.username}</Text>
                 {/* fam commorbidity */}
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    color: mainColor,
-                  }}
-                >
+                <Text style={styles.cardCommorbidity}>
                   Comorbidity: {member?.commorbidity}
                 </Text>
               </View>

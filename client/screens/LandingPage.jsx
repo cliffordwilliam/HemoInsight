@@ -15,37 +15,25 @@ export default function LandingPage({ navigation }) {
       <Image
         style={styles.logo}
         source={{
-          uri: "https://media.discordapp.net/attachments/1156408374720737322/1197503175687688273/logo3.png?ex=65bb80bd&is=65a90bbd&hm=2830bca092551756d808d947401d7ff14014ba3e7d43d832d8a546ef0e598c0d&",
+          uri: "https://cdn.discordapp.com/attachments/1160037507178696717/1199878289318227978/logo3.png?ex=65c424bc&is=65b1afbc&hm=6aaac0ff9c5147f273b8f6c6751702d9bb4ca7460b2b067f0e5cdeaafa1f34a6&",
         }}
       />
-      <View style={{ flexDirection: "row" }}>
+      <View style={styles.buttonCon}>
         <Pressable
           onPress={() => {
             navigation.navigate("Register");
           }}
-          style={{
-            width: 100,
-            height: 50,
-            backgroundColor: "darkred",
-            borderRadius: 8,
-            margin: 15,
-          }}
+          style={styles.buttonSec}
         >
-          <Text style={{ fontSize: 20, color: "white" }}>Register</Text>
+          <Text style={styles.buttonTextSec}>Register</Text>
         </Pressable>
         <Pressable
           onPress={() => {
             navigation.navigate("Login");
           }}
-          style={{
-            width: 100,
-            height: 50,
-            backgroundColor: "darkred",
-            borderRadius: 8,
-            margin: 15,
-          }}
+          style={styles.button}
         >
-          <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </Pressable>
       </View>
     </View>
@@ -58,10 +46,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonCon: {
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 0,
+    padding: 8,
+    gap: 8,
+  },
   logo: {
     width: "100%",
     height: "100%",
     marginRight: 8,
+    zIndex: -1,
   },
   header: {
     fontSize: 24,
@@ -80,13 +76,25 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#59BB85",
-    width: "100%",
     padding: 10,
     borderRadius: 8,
-    marginTop: 12,
+    flex: 1,
   },
   buttonText: {
     color: "white",
+    fontWeight: "800",
+    textAlign: "center",
+  },
+  buttonSec: {
+    backgroundColor: "#ffffff",
+    borderColor: "#59BB85",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    flex: 1,
+  },
+  buttonTextSec: {
+    color: "#59BB85",
     fontWeight: "800",
     textAlign: "center",
   },

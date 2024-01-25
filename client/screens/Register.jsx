@@ -11,6 +11,7 @@ import { useRef, useState } from "react";
 import { REGISTER } from "../config/queries";
 import { useMutation } from "@apollo/client";
 import SelectDropdown from "react-native-select-dropdown";
+import DatePicker from "react-native-datepicker";
 
 const commorbidityList = [
   "Glucose",
@@ -32,7 +33,6 @@ export default function Register({ navigation }) {
   const [height, setHeight] = useState("");
   const [address, setAddress] = useState("");
   const [commorbidity, setCommorbidity] = useState("");
-
   // db talk
   const [MutateRegister, { data, loading, error }] = useMutation(REGISTER, {
     onCompleted: () => {
@@ -72,7 +72,6 @@ export default function Register({ navigation }) {
           placeholder="Full Name"
           onChangeText={(text) => setUsername(text)}
         />
-        {/* <Text style={styles.desc}>Your name</Text> */}
         {/* email */}
         <Text style={styles.label}>Email:</Text>
         <TextInput
@@ -80,7 +79,6 @@ export default function Register({ navigation }) {
           placeholder="Email Format Required"
           onChangeText={(text) => setEmail(text)}
         />
-        {/* <Text style={styles.desc}>Your email</Text> */}
         {/* password */}
         <Text style={styles.label}>Password:</Text>
         <TextInput
@@ -89,7 +87,6 @@ export default function Register({ navigation }) {
           placeholder="Minimal 6 Characters Password"
           secureTextEntry
         />
-        {/* <Text style={styles.desc}>Your password</Text> */}
         {/* birthday */}
         <Text style={styles.label}>Birthdate (dd/mm/yyyy)</Text>
         <TextInput
@@ -97,7 +94,6 @@ export default function Register({ navigation }) {
           placeholder="Birth Date"
           onChangeText={(text) => setBirthdate(text)}
         />
-        {/* <Text style={styles.desc}>Your birthdate in dd/mm/yyyy</Text> */}
         {/* weight */}
         <Text style={styles.label}>Weight (Kg):</Text>
         <TextInput
@@ -105,7 +101,6 @@ export default function Register({ navigation }) {
           onChangeText={(text) => setWeight(text)}
           placeholder="Weight"
         />
-        {/* <Text style={styles.desc}>Your weight in kilogram</Text> */}
         {/* height */}
         <Text style={styles.label}>Height (Cm):</Text>
         <TextInput
@@ -113,7 +108,6 @@ export default function Register({ navigation }) {
           onChangeText={(text) => setHeight(text)}
           placeholder="Height"
         />
-        {/* <Text style={styles.desc}>Your height in meters</Text> */}
         {/* address */}
         <Text style={styles.label}>Address:</Text>
         <TextInput
@@ -121,9 +115,7 @@ export default function Register({ navigation }) {
           onChangeText={(text) => setAddress(text)}
           placeholder="Address"
         />
-        {/* <Text style={styles.desc}>Your home address</Text> */}
         {/* comorbidity */}
-
         <Text style={styles.label}>Comorbidity (Optional)</Text>
         <Text style={styles.labeldesc}>
           Do you have an existing medical condition? We can recommend health
@@ -135,7 +127,6 @@ export default function Register({ navigation }) {
           buttonStyle={styles.input}
           search="true"
         />
-        {/* <Text style={styles.desc}>Your sickness</Text> */}
         {/* button submit */}
         <Pressable onPress={mutateRegister} style={styles.button}>
           <Text style={styles.buttonText}>Sign up</Text>
@@ -145,8 +136,10 @@ export default function Register({ navigation }) {
           <Text style={styles.link}>Have an account? Log in</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("LandingPage")}>
-        <Text style={{color:"gray", margin:5, fontSize:12}}>Hemo Insight Inc.</Text>
-      </TouchableOpacity>
+          <Text style={{ color: "gray", margin: 5, fontSize: 12 }}>
+            Hemo Insight Inc.
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

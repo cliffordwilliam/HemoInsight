@@ -218,6 +218,13 @@ export default function Geolocation({ navigation, route }) {
       <View style={styles.choosenCard}>
         {chooseLab.name ? (
           <>
+            {recommededLab.map((lab) => {
+              if (lab.clinic == chooseLab.name) {
+                return (
+                  <Text style={styles.rec}>Recommendation - {lab.title}</Text>
+                );
+              }
+            })}
             <Text style={styles.title}>{chooseLab.name}</Text>
             <Text>{chooseLab.address}</Text>
             {/* kick CheckServices  */}
@@ -250,32 +257,6 @@ export default function Geolocation({ navigation, route }) {
               >
                 <Text style={styles.buttonText}>OnVisit</Text>
               </Pressable>
-
-              {recommededLab.map((lab) => {
-                if (lab.clinic == chooseLab.name) {
-                  return (
-                    <View
-                      style={{
-                        padding: 2,
-                        paddingHorizontal: 10,
-                        borderRadius: 8,
-                        width: 155,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          textAlign: "right",
-                          fontStyle: "italic",
-                          color: "darkred",
-                        }}
-                      >
-                        Recommended based on patient's comorbidity - {lab.title}
-                      </Text>
-                    </View>
-                  );
-                }
-              })}
             </View>
           </>
         ) : (
@@ -290,6 +271,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
+  },
+  rec: {
+    fontSize: 10,
+    fontStyle: "italic",
+    color: "darkred",
   },
   map: {
     width: "100%",
@@ -326,7 +312,6 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
-    height: 45,
   },
   fullButton: {
     marginTop: 12,

@@ -63,7 +63,7 @@ export default function Login({ navigation }) {
       {/* <Text style={styles.desc}>Your password</Text> */}
       {/* button submit */}
       <Pressable onPress={mutateLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Sign In</Text>
+        <Text style={styles.buttonText}>Log In</Text>
       </Pressable>
       {/* kick register */}
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>

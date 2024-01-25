@@ -20,6 +20,7 @@ import {
   UPDATE_STATUS_REPORT,
   GETS_SERVICES_BY_HOSPITAL,
   SCHEDULE,
+  LOGGEDINUSER,
 } from "../config/queries";
 import { useStripe } from "@stripe/stripe-react-native";
 
@@ -36,6 +37,23 @@ export default function ReportDetail({ route, navigation }) {
   let subTotal = 0; // count total price
   // stripe
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  // LAZY get loggedin
+  const [
+    funcLoggedIn,
+    { data: loggedInData, loading: loggedInLoading, client: loggedInClient },
+  ] = useLazyQuery(LOGGEDINUSER, {
+    onCompleted: () => {
+      console.log(
+        "Report Detail -> onCompleted QueryLOGGEDINUSER",
+        loggedInData
+      );
+      console.log(loggedInData.loggedIn.status, "Report Detail Status");
+    },
+    refetchQueries: [LOGGEDINUSER],
+  });
+  useEffect(() => {
+    funcLoggedIn();
+  }, []);
   // ONREADY get report by id
   const { data: ReportById, loading: ReportByIdLoading } = useQuery(
     GET_REPORT_BY_ID,
@@ -107,6 +125,8 @@ export default function ReportDetail({ route, navigation }) {
   };
   // press -> stripe
   const stripe = (amount) => {
+    console.log(amount, "amount");
+    console.log(subTotal, "subTotal");
     MutateIntent({
       variables: {
         payload: {
@@ -152,11 +172,8 @@ export default function ReportDetail({ route, navigation }) {
           StatusReportRes
         );
         // update status report to paid
-        let target = ReportById?.report?.userOwner?.email;
-        if (target === undefined) {
-          target = ReportById?.report.childOwner.birthdate;
-        }
-        if (ReportById?.report?.userOwner?.status !== "Regular") {
+        let target = loggedInData.loggedIn.email;
+        if (loggedInData.loggedIn.status !== "Regular") {
           MutateCron({
             variables: {
               payload: {
@@ -165,6 +182,7 @@ export default function ReportDetail({ route, navigation }) {
               },
             },
           });
+          navigation.navigate("ReportList");
         } else {
           navigation.navigate("ReportList");
         }
@@ -173,21 +191,23 @@ export default function ReportDetail({ route, navigation }) {
     }
   );
   // SEND MAIL MUTATE ON PAY
-  const [MutatePayMail, { data: PayMailRes }] = useMutation(PAY_MAIL, {
-    onCompleted: () => {
-      console.log(
-        "ReportDetail page -> onCompleted MutationPAY_MAIL",
-        PayMailRes
-      );
-      // update status report to paid
-      MutateStatusReport({
-        variables: {
-          reportId: reportId,
-        },
-      });
-    },
-    refetchQueries: [GET_REPORT_BY_ID],
-  });
+  const [MutatePayMail, { data: PayMailRes, error: PayMailError }] =
+    useMutation(PAY_MAIL, {
+      onCompleted: () => {
+        console.log(
+          "ReportDetail page -> onCompleted MutationPAY_MAIL",
+          PayMailRes
+        );
+        // update status report to paid
+        MutateStatusReport({
+          variables: {
+            reportId: reportId,
+          },
+        });
+      },
+      refetchQueries: [GET_REPORT_BY_ID],
+      onError: () => console.log(PayMailError),
+    });
   // MUTATE STRIPE
   const [
     MutateIntent,
@@ -207,16 +227,17 @@ export default function ReportDetail({ route, navigation }) {
         return;
       }
       await presentPaymentSheet(); // wait here until user click pay or cancel
+      if (loggedInData.loggedIn.status !== "Regular") {
+        subTotal *= 0.9;
+      }
       // send mail
-      console.log();
       MutatePayMail({
         variables: {
           payload: {
-            amountPaid: payAmount,
+            amountPaid: subTotal,
           },
         },
       });
-      navigation.goBack();
     },
     onError: async (res) => {
       console.log("Pay Screen -> MutateIntent onError", res);
@@ -295,11 +316,11 @@ export default function ReportDetail({ route, navigation }) {
             <View style={styles.cardBorder}>
               {ReportById?.report?.userOwner && (
                 <View style={styles.profileCardTopSection}>
-                  {/* owner img */}
+                  {/* logged in user img */}
                   <Image
                     style={styles.profileCardTopSectionImage}
                     source={{
-                      uri: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?cs=srgb&dl=pexels-andrea-piacquadio-774909.jpg&fm=jpg",
+                      uri: "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
                     }}
                   />
                   {/* owner text data con */}
@@ -464,49 +485,43 @@ export default function ReportDetail({ route, navigation }) {
                 </View>
               )}
             </View>
-
             {/* sub total */}
             <Text style={styles.subTotal}>
               Sub Total Rp: {subTotal.toFixed(3)}
             </Text>
             {/* member disc */}
-            <View
-              style={{
-                width: "auto",
-                height: "auto",
-                backgroundColor: "#FFFFC2",
-              }}
-            >
-              <Text style={styles.subTotalDisc}>
-                Membership Discount 10% - Rp: {(subTotal * 0.9).toFixed(3)}
-              </Text>
-              {/* premium */}
-              <Text style={styles.subTotalDisc}>
-                Applicable for Premium Membership only membership
-              </Text>
-            </View>
-
+            {loggedInData.loggedIn.status === "Regular" ? (
+              <View
+                style={{
+                  width: "auto",
+                  height: "auto",
+                  backgroundColor: "#FFFFC2",
+                }}
+              >
+                <Text style={styles.subTotalDisc}>
+                  Membership Discount 10% - Rp: {(subTotal * 0.9).toFixed(3)}
+                </Text>
+                {/* premium */}
+                <Text style={styles.subTotalDisc}>
+                  Applicable for Premium Membership only membership
+                </Text>
+              </View>
+            ) : (
+              <></>
+            )}
             {/* total */}
-            {ReportById?.report?.status == "Premium" ? (
+            {loggedInData.loggedIn.status !== "Regular" ? (
               <Text style={styles.total}>
                 Total Rp: {(subTotal * 0.9).toFixed(3)}
               </Text>
             ) : (
               <Text style={styles.total}>Total Rp: {subTotal.toFixed(3)}</Text>
             )}
-            {/* <Text style={styles.total}>
-              Total Rp: {(subTotal * 0.9).toFixed(3)}
-            </Text> */}
             {/* pay button = go to ??? */}
-            {ReportById?.report?.status == "unpaid" ? (
+            {ReportById?.report?.status === "unpaid" ? (
               <Pressable
                 style={styles.button}
                 onPress={() => {
-                  let pay = subTotal;
-                  if (ReportById?.report?.userOwner?.status !== "Regular") {
-                    pay *= 0.9;
-                  }
-                  setPayAmount(pay);
                   stripe(subTotal);
                 }}
               >
